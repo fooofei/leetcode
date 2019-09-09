@@ -1,0 +1,2 @@
+# leetcode
+some examin code
