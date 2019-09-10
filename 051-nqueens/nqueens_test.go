@@ -32,6 +32,10 @@ func tests(fn func(int) int, t *testing.T) {
 	}
 }
 
+func TestBitArray2(t *testing.T) {
+	tests(bita.Sum2, t)
+}
+
 func TestIterRowColArray(t *testing.T) {
 	tests(iterrow.Sum, t)
 }
@@ -42,10 +46,6 @@ func TestMultiArray(t *testing.T) {
 
 func TestBitArray1(t *testing.T) {
 	tests(bita.Sum1, t)
-}
-
-func TestBitArray2(t *testing.T) {
-	tests(bita.Sum2, t)
 }
 
 func TestBitSetRightMove(t *testing.T) {

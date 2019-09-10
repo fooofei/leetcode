@@ -4,6 +4,12 @@ import (
 	"math"
 )
 
+//
+// 最一般的方法
+// 递归逻辑：
+//    从 0,1,2，... 行开始算起，每一行都在哪一列放置皇后
+//
+
 func isNeighbor(row0, col0, row1, col1 int) bool {
 	// 肯定不在同一行
 	// 是否在同一列需要判断
@@ -17,6 +23,7 @@ func isNeighbor(row0, col0, row1, col1 int) bool {
 	return x == y
 }
 
+// 对已经放置的所有皇后进行冲突对比
 func anyNeighbor(locate []int, maxRow int, curCol int) bool {
 	for row := 0; row < maxRow; row++ {
 		if isNeighbor(row, locate[row], maxRow, curCol) {
@@ -26,7 +33,8 @@ func anyNeighbor(locate []int, maxRow int, curCol int) bool {
 	return false
 }
 
-func queenRows(locate []int, row int) int {
+// locate 每一行的皇后放在了哪一列
+func trace(locate []int, row int) int {
 
 	maxRow := len(locate)
 	maxCol := len(locate)
@@ -39,7 +47,7 @@ func queenRows(locate []int, row int) int {
 		// 判断 即将摆放的 [row, i] 是否有 neighbor
 		if !anyNeighbor(locate, row, i) {
 			locate[row] = i
-			r += queenRows(locate, row+1)
+			r += trace(locate, row+1)
 			// 是否清除足迹 对结果没影响
 			locate[row] = -1
 		}
@@ -53,5 +61,5 @@ func Sum(nq int) int {
 	for i, _ := range array {
 		array[i] = -1
 	}
-	return queenRows(array, 0)
+	return trace(array, 0)
 }
