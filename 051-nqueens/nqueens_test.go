@@ -4,6 +4,7 @@ import (
 	bita "nqueens/bit-array"
 	iterrow "nqueens/iterrow-colarray"
 	multi "nqueens/multi-array"
+	per "nqueens/permutation"
 	"testing"
 
 	"github.com/willf/bitset"
@@ -46,6 +47,10 @@ func TestMultiArray(t *testing.T) {
 
 func TestBitArray1(t *testing.T) {
 	tests(bita.Sum1, t)
+}
+
+func TestPermutation(t *testing.T) {
+	tests(per.Sum, t)
 }
 
 func TestBitSetRightMove(t *testing.T) {

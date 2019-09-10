@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	bita "nqueens/bit-array"
+	prmt "nqueens/permutation"
 )
 
 func main() {
 	for i := 4; i < 30; i++ {
-		sum := bita.Sum1(i)
+		sum := prmt.Sum(i)
 		fmt.Printf("sum(%v)= %v\n", i, sum)
 	}
 }
