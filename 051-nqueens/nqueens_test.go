@@ -1,6 +1,7 @@
 package main
 
 import (
+	bint "nqueens/bigint"
 	bita "nqueens/bit-array"
 	iterrow "nqueens/iterrow-colarray"
 	multi "nqueens/multi-array"
@@ -33,6 +34,10 @@ func tests(fn func(int) int, t *testing.T) {
 	}
 }
 
+func TestBigInt(t *testing.T) {
+	tests(bint.Sum, t)
+}
+
 func TestBitArray2(t *testing.T) {
 	tests(bita.Sum2, t)
 }
@@ -49,7 +54,7 @@ func TestBitArray1(t *testing.T) {
 	tests(bita.Sum1, t)
 }
 
-func TestPermutation(t *testing.T) {
+func Permutation(t *testing.T) {
 	tests(per.Sum, t)
 }
 
@@ -74,11 +79,13 @@ func TestBitSetLeftMove(t *testing.T) {
 	assert.Equal(t, bset.Test(79), true)
 }
 
-// === RUN   TestIterRowColArray
-//--- PASS: TestIterRowColArray (1.56s)
+// === RUN   TestBigInt
+//--- PASS: TestBigInt (4.70s)
+//=== RUN   TestBitArray2
+//--- PASS: TestBitArray2 (3.66s)
+//=== RUN   TestIterRowColArray
+//--- PASS: TestIterRowColArray (1.54s)
 //=== RUN   TestMultiArray
-//--- PASS: TestMultiArray (0.42s)
+//--- PASS: TestMultiArray (0.38s)
 //=== RUN   TestBitArray1
 //--- PASS: TestBitArray1 (0.06s)
-//=== RUN   TestBitArray2
-//--- PASS: TestBitArray2 (3.76s)
