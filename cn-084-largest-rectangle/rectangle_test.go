@@ -33,10 +33,14 @@ func testTempl(t *testing.T, fn func([]int) int) {
 	}
 }
 
-func Test1(t *testing.T) {
+func TestDivision(t *testing.T) {
 	testTempl(t, largestRectangleAreaDivision)
 }
 
-func Test2(t *testing.T) {
+func TestMonoStack(t *testing.T) {
 	testTempl(t, largestRectangleAreaMonoStack)
+}
+
+func TestSegmentTree(t *testing.T){
+	testTempl(t, largestRectangleAreaDivisionSegmentTree)
 }
