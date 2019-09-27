@@ -41,6 +41,6 @@ func TestMonoStack(t *testing.T) {
 	testTempl(t, largestRectangleAreaMonoStack)
 }
 
-func TestSegmentTree(t *testing.T){
+func TestSegmentTree(t *testing.T) {
 	testTempl(t, largestRectangleAreaDivisionSegmentTree)
 }

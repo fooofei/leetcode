@@ -27,13 +27,13 @@ func largestRectangleAreaDivisionSegmentTree(heights []int) int {
 
 	st := segtree.New(intSlice(heights))
 
-	return largestRectangleAreaDivisionSt(st, heights, 0, len(heights)-1)
+	return largestRectangleAreaDivisionSt(st, heights, 0, len(heights))
 }
 
 func largestRectangleAreaDivisionSt(st *segtree.SegmentTree, heights []int, start int, end int) int {
 
 	idx := 0
-	if start < end {
+	if start < end-1 {
 		idx = st.Search(start, end, intSlice(heights))
 	} else {
 		// 只有 1 个值，不进行搜索了，加速
@@ -42,12 +42,12 @@ func largestRectangleAreaDivisionSt(st *segtree.SegmentTree, heights []int, star
 
 	minValue := heights[idx]
 
-	areaMax := minValue * (end - start + 1)
+	areaMax := minValue * (end - start)
 	if idx > start {
-		areaLeft := largestRectangleAreaDivisionSt(st, heights, start, idx-1)
+		areaLeft := largestRectangleAreaDivisionSt(st, heights, start, idx)
 		areaMax = int(math.Max(float64(areaMax), float64(areaLeft)))
 	}
-	if idx < end {
+	if idx < end-1 {
 		areRight := largestRectangleAreaDivisionSt(st, heights, idx+1, end)
 		areaMax = int(math.Max(float64(areaMax), float64(areRight)))
 	}
