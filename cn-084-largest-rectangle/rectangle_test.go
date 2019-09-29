@@ -25,6 +25,7 @@ func testTempl(t *testing.T, fn func([]int) int) {
 	cases := []result{
 		{[]int{2, 1, 5, 6, 2, 3}, 10},
 		{[]int{4, 2, 0, 3, 2, 5}, 6},
+		{[]int{4, 6, 5, 3}, 12},
 	}
 
 	for _, v := range cases {
@@ -43,4 +44,8 @@ func TestMonoStack(t *testing.T) {
 
 func TestSegmentTree(t *testing.T) {
 	testTempl(t, largestRectangleAreaDivisionSegmentTree)
+}
+
+func TestStack2(t *testing.T) {
+	testTempl(t, largestRectangleAreaMonoStack2)
 }
