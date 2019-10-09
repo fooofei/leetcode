@@ -7,13 +7,13 @@ using namespace std;
 
 struct data_t {
     int data;
-
-    bool operator()(const struct data_t& a, const struct data_t& b)
-    {
-        // 有 = 号 会导致 sort 无法退出/或者崩溃
-        return a.data >= b.data;
-    }
 };
+
+bool sort_cmp(const struct data_t& last, const struct data_t& first)
+{
+    // 有 = 号 会导致 sort 无法退出/或者崩溃
+    return last.data < first.data;
+}
 
 void testSort()
 {
@@ -25,8 +25,9 @@ void testSort()
         vec.push_back(d);
     }
 
-    struct data_t cmp;
-    sort(vec.begin(), vec.end(), cmp);
+    vec[33].data = 100;
+
+    sort(vec.begin(), vec.end(), sort_cmp);
 
     cout << "first= " << (*vec.begin()).data << endl;
     cout << "last=" << (*(vec.end() - 1)).data << endl;
