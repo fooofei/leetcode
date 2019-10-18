@@ -1,8 +1,17 @@
 #include <algorithm>
+#include <array>
+#include <bitset>
+#include <chrono>
 #include <iostream>
+#include <limits>
+#include <list>
 #include <map>
+#include <stack>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string>
+#include <thread>
 #include <vector>
-
 using namespace std;
 
 // https://leetcode-cn.com/problems/3sum/
@@ -14,9 +23,9 @@ bool sort_cmp(const int& first, const int& last)
 
 class Solution {
 public:
-    vector<vector<int> > threeSum(vector<int>& nums)
+    vector<vector<int>> threeSum(vector<int>& nums)
     {
-        vector<vector<int> > result;
+        vector<vector<int>> result;
 
         sort(nums.begin(), nums.end(), sort_cmp);
 
@@ -25,6 +34,15 @@ public:
             size_t j = i + 1;
             size_t k = nums.size() - 1;
             int val1 = nums[i];
+
+            if (val1 + nums[j] + nums[j + 1] > 0) {
+                i++;
+                continue;
+            }
+            if (val1 + nums[k - 1] + nums[k] < 0) {
+                i++;
+                continue;
+            }
 
             for (; j < k;) {
                 int sum = val1 + nums[j] + nums[k];
@@ -37,8 +55,8 @@ public:
                     }
                     j = j1;
 
-                    size_t k1 = k + 1;
-                    for (; j < k1 && nums[k1] == nums[k]; k1++) {
+                    size_t k1 = k - 1;
+                    for (; j < k1 && nums[k1] == nums[k]; k1--) {
                     }
                     k = k1;
 
@@ -59,14 +77,30 @@ public:
     }
 };
 
+void testf(vector<int> input, int resultCount)
+{
+    Solution sln;
+
+    auto r = sln.threeSum(input);
+
+    if (r.size() == resultCount) {
+        cout << "success " << endl;
+    } else {
+        cout << "fail " << endl;
+    }
+}
+
 int main()
 {
 
     Solution sln;
     (void)sln;
 
-    vector<int> c = {-1, 0, 1, 2, -1, -4};
-    auto r = sln.threeSum(c);
+    testf({ -1, 0, 1, 2, -1, -4 }, 2);
+
+    testf({ -4, -1, -4, 0, 2, -2, -4, -3, 2, -3, 2, 3, 3, -4 }, 4);
+
+    testf({ -4, -2, 1, -5, -4, -4, 4, -2, 0, 4, 0, -2, 3, 1, -5, 0 }, 6);
 
     std::cout << "main exit\n";
     return 0;
