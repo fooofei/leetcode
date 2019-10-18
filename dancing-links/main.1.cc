@@ -79,7 +79,7 @@ void uncover(struct Node* col)
     col->left->right = col;
 }
 
-struct Node* minColumn(struct Node* root)
+struct Node* minSizeColumn(struct Node* root)
 {
     struct Node* col = root->right;
 
@@ -99,9 +99,52 @@ struct Node* minColumn(struct Node* root)
     return col;
 }
 
+void build(struct Node* root, const vector<vector<char>>& board)
+{
+
+    // max X =
+    //  约束 1 每个格子必须有唯一值 9*9 +
+    //  约束 2 每行必须有唯一值 9*9 +
+    //  约束 3 每列必须有唯一值 9*9 +
+    //  约束 4 每宫中的每格必须有值 9*9
+    // = 324
+
+    // max Y = 每个格子取值 1-9 的可能的和为 9*9*9
+
+    int girdX = board[0].size();
+    int girdY = board.size();
+
+    vector<vector<bool>> boolX(girdX, vector<bool>(10, false));
+    vector<vector<bool>> boolY(girdY, vector<bool>(10, false));
+    vector<vector<bool>> boolBox(girdX, vector<bool>(10, false));
+
+    for (size_t y = 0; y < board.size(); y++) {
+        const vector<char>& vec = board[y];
+        for (size_t x = 0; x < vec.size(); x++) {
+
+            size_t boxIndex = y / 3 * 3 + x;
+            int val = vec[x] - '0';
+            if (vec[x] == '.') {
+                val = 0;
+            }
+            if (boolX[x][val]) {
+                printf("conflict\n");
+            }
+            boolX[x][val] = true;
+            if (boolY[y][val]) {
+                printf("conflict\n");
+            }
+            boolY[y][val] = true;
+            if (boolBox[boxIndex][val]) {
+                printf("conflict\n");
+            }
+            boolBox[boxIndex][val] = true;
+        }
+    }
+}
+
 class Solution {
 
-    struct Node* root_;
     list<struct Node*> allocedNodes_;
     // struct Node* columnHeads[400]; // for what?
 
@@ -136,7 +179,6 @@ class Solution {
 public:
     Solution()
     {
-        root_ = NULL;
     }
     ~Solution()
     {
@@ -146,44 +188,43 @@ public:
         allocedNodes_.clear();
     }
 
-	bool solve(vector<struct Node *> & stk) 
-	{
+    bool solve(vector<struct Node*>& stk)
+    {
 
-		// no rows
-		if(root_->left == root_) {
-			
-			// get all stack
-			return true;
-		}
+        // no rows
+        if (root_->left == root_) {
 
+            // get all stack
+            return true;
+        }
 
-		struct Node * col = minColumn(root_);
-		cover(col);
+        struct Node* col = minColumn(root_);
+        cover(col);
 
-		for(struct Node * row = col->down; row != col; row= row->down) {
-			stk.push_back(row);
-			for(struct Node * j = row->right; j != row; j = j->right) {
-				cover(j->columnHead);
-			}
+        for (struct Node* row = col->down; row != col; row = row->down) {
+            stk.push_back(row);
+            for (struct Node* j = row->right; j != row; j = j->right) {
+                cover(j->columnHead);
+            }
 
-			if(solve(stk)) {
-				return true;
-			}
+            if (solve(stk)) {
+                return true;
+            }
 
-			stk.pop_back();
-			for(struct Node * j = row->left; j != row; j= j->left) {
-				uncover(j->columnHead);
-			}
+            stk.pop_back();
+            for (struct Node* j = row->left; j != row; j = j->left) {
+                uncover(j->columnHead);
+            }
+        }
 
-		}
-
-
-		uncover(col);
-		return false;
-	}
+        uncover(col);
+        return false;
+    }
 
     void solveSudoku(vector<vector<char>>& board)
     {
+        // 是把已经填充的做结点 还是把未填充的做结点 ？
+        // 应该是未填充的吧
     }
 };
 
@@ -192,8 +233,6 @@ int main()
 
     Solution a;
     (void)a;
-
-    std::this_thread::sleep_for(1s);
 
     vector<vector<char>> b = {
         { '5', '3', '.', '.', '7', '.', '.', '.', '.' },

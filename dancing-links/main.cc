@@ -162,7 +162,7 @@ private:
         return c;
     }
 
-    void append_column(int n)
+    void  append_column(int n)
     {
 
         Column* c = new_column(n);
