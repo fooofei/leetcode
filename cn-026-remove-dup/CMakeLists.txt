@@ -1,0 +1,24 @@
+
+cmake_minimum_required(VERSION 3.1)
+project(leetcode)
+
+if(APPLE)
+    set(CMAKE_MACOSX_RPATH 0)
+endif()
+
+set(BIN_NAME test1)
+
+# AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_LIST_DIR}/securec securec_src_files)
+
+set(Source_files 
+    ${CMAKE_CURRENT_LIST_DIR}/main.cc
+	)
+
+add_executable(${BIN_NAME} ${Source_files})
+
+source_group(files FILES ${Source_files})
+
+if(WIN32)
+	target_compile_options(${BIN_NAME} PRIVATE /source-charset:utf-8 /execution-charset:utf-8)
+	target_compile_definitions(${BIN_NAME} PRIVATE WIN32)
+endif()

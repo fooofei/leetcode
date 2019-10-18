@@ -6,8 +6,7 @@ if(APPLE)
     set(CMAKE_MACOSX_RPATH 0)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
-set(BIN_NAME test)
+set(BIN_NAME test1)
 
 # AUX_SOURCE_DIRECTORY(${CMAKE_CURRENT_LIST_DIR}/securec securec_src_files)
 
