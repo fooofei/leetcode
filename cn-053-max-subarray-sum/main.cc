@@ -20,6 +20,40 @@ bool sort_cmp(const int& first, const int& last)
     return first > last;
 }
 
+typedef struct SumArray {
+    vector<int> a_;
+    int sum_;
+
+    SumArray()
+        : sum_(0)
+    {
+    }
+
+    void push_back(int val)
+    {
+        a_.push_back(val);
+        sum_ += val;
+    }
+
+    int sum()
+    {
+        return sum_;
+    }
+
+    void clear()
+    {
+        a_.clear();
+        sum_ = 0;
+    }
+
+    size_t size()
+    {
+        return a_.size();
+    }
+
+
+} SumArray;
+
 class Solution {
 public:
     int maxSubArray(const vector<int>& nums)
@@ -33,34 +67,29 @@ public:
             return nums[0];
         }
 
-        vector<int> stk;
-        int currentSum = 0;
+        SumArray stk;
 
+        // 始终保持 sum 一定是 >= 0 
+        // num < 0 && sum + num >= 0 依旧是正激励
+        // num < 0 && sum + num < 0 清空栈
+        // num > 0 直接入栈
         for (auto num : nums) {
-
-            if (num < 0 && num + currentSum < 0) {
-                if (stk.size() > 0) {
-                    maxSums.push_back(currentSum);
-                } else {
-                    maxSums.push_back(num);
-                }
-                currentSum = 0;
+            if(num < 0 && stk.size() > 0) {
+                // >=0 的数 + <0的数，一定要保存快照
+                maxSums.push_back(stk.sum());
+            }
+            if(num < 0 && num + stk.sum() < 0) {
+                // 不保存当前数，清空栈 
+                // 留一下当前数到 maxSums
+                maxSums.push_back(num);
                 stk.clear();
-            } else if (num < 0) {
-                if (stk.size() > 0) {
-                    maxSums.push_back(currentSum);
-                }
-
-                currentSum += num;
-                stk.push_back(num);
+                continue;
             } else {
-                currentSum += num;
                 stk.push_back(num);
             }
         }
-
         if (stk.size() > 0) {
-            maxSums.push_back(currentSum);
+            maxSums.push_back(stk.sum());
         }
 
         sort(maxSums.begin(), maxSums.end(), sort_cmp);

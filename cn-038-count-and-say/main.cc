@@ -11,6 +11,8 @@
 
 using namespace std;
 
+// https://leetcode-cn.com/problems/count-and-say/
+
 class Solution {
 public:
     map<int, string> cache;

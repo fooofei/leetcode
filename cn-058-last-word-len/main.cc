@@ -24,9 +24,11 @@ public:
         size_t wordBegin = s.find_last_of(" ", wordEnd);
 
         if (wordEnd < s.size()) {
+            // " aaa"
             if (wordBegin < s.size()) {
                 return wordEnd - wordBegin;
             }
+            // "aaa"
             return wordEnd + 1; // 错误点： 漏考虑
         }
         return 0;

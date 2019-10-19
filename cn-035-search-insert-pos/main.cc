@@ -13,6 +13,9 @@ using namespace std;
 
 // https://leetcode-cn.com/problems/search-insert-position/
 
+// 就是一个二分查找
+// 注意：返回值
+// 题目里看不出参数是否经过升序 还是 降序
 
 bool bs_cmp(const int& target, const int& mid)
 {
