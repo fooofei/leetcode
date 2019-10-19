@@ -17,7 +17,50 @@ class Solution {
 public:
     map<int, string> cache;
 
+    // 递归的解法
+    // :read 
+    // :num 表示 在 num 时 读 read
+    // :return 求 num +1 
+    string say(string read, int num, int maxNum)
+    {
+        string s;
+
+        int count = 1;
+        char cursorNum = read[0];
+
+        auto found = cache.find(maxNum);
+        if (found != cache.end()) {
+            return found->second;
+        }
+        for (size_t i = 1; i < read.size(); i++) {
+
+            if (read[i] == cursorNum) {
+                count += 1;
+            } else {
+                s.append(to_string(count));
+                s.append(1, cursorNum);
+                count = 1;
+                cursorNum = read[i];
+            }
+        }
+        s.append(to_string(count));
+        s.append(1, cursorNum);
+        num += 1;
+        if (num < maxNum) {
+            return say(s, num, maxNum);
+        }
+        cache[num] = s;
+        return s;
+    }
+
     string countAndSay(int n)
+    {
+        cache[1] = "1";
+        return say("1", 1, n);
+    }
+
+    // 曾经写的非递归的方法
+    string countAndSay1(int n)
     {
         int start = 1;
         string numString("1");
