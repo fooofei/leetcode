@@ -48,8 +48,8 @@ public:
         for (; i < j;) {
             int mid = (int)(((uint64_t)i + (uint64_t)j) / 2);
 
-			// 难点：确立这样一个令序列成 F F F F T T T 的表达式
-			// 然后就可以使用二分查找
+            // 难点：确立这样一个令序列成 F F F F T T T 的表达式
+            // 然后就可以使用二分查找
             bool b = (x / mid) < mid;
             if (!b) {
                 i = mid + 1;
