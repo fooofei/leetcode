@@ -10,7 +10,6 @@
 #include <vector>
 
 using namespace std;
-
 // https://leetcode-cn.com/problems/sliding-window-maximum/
 // 20191008 反省，第一个版本没反应过来，如何保证窗口内的数据总是有序的
 //  以及没反应过来，如何保证移除窗口内的老数据的时候如何做到重新找到最大值

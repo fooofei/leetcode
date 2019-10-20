@@ -83,7 +83,6 @@ public:
                 // 留一下当前数到 maxSums
                 maxSums.push_back(num);
                 stk.clear();
-                continue;
             } else {
                 stk.push_back(num);
             }
