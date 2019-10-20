@@ -27,18 +27,19 @@ bool sortCmp(const WithIndex& first, const WithIndex& last)
 {
     return first.value < last.value;
 }
+
+void copy(const vector<int>& src, vector<WithIndex>& dst)
+{
+    for (int i = 0; i < (int)src.size(); i++) {
+        WithIndex a;
+        a.index = i;
+        a.value = src[i];
+        dst.push_back(a);
+    }
+}
+
 class Solution {
 public:
-    void copy(const vector<int>& src, vector<WithIndex>& dst)
-    {
-        for (int i = 0; i < (int)src.size(); i++) {
-            WithIndex a;
-            a.index = i;
-            a.value = src[i];
-            dst.push_back(a);
-        }
-    }
-
     vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2)
     {
         vector<WithIndex> withIndex;
