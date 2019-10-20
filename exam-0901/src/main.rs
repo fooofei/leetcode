@@ -53,21 +53,35 @@
 //  10 = 42 20 = 627
 
 // 解题思路
-// f(x,y) 表示为 和为 x 的，组成数值个数为 y 的结果有多少可能
+// 先定递归函数的参数
+// f(x,y) 
+// :x 和为x  
+// :y 表示用几个数字表示和x 
+// :return 返回可能的组成结果数量
+//
 // f(x,y) =
+// 举例归纳 f(8,3)
+// 既然是 3 个数字组成，每个数字最小为 1，因此先垫上 1
+// 1 1 1 为基准，还剩 8-3=5，在 <3 的坑上随便放，即 f(5,1) + f(5,2)
+// 2 2 2 为基准，还剩 8-6=2, 在 <3 的坑上随便放，即 f(2,1) + f(2,2) 
+// 3 3 3 不成立，结束
+// 归纳到一般情况
 //
 //    sum =0
-//    for(m in 1..=x/y) { // 填 y 个坑，每个坑先填入多少值(从 1 到 x/y)
-//        for(n in 1..=y-1) { // 剩下的值总和还给提供多少坑(从 1 到 y-1)
-//            // 和为 x-y*m 填入 n 个坑，有多少可能
+//    for(m in 1..=x/y) { 
+//        for(n in 1..=y-1) { 
 //            sum += f(x-y*m, n);
 //        }
 //    }
 //    return sum;
 //
+// 并且两个特例 f(x, 1)=1 f(x,x)=1
 
 fn layer_count(cache: &mut Vec<Vec<i32>>, num: i32, layer: i32) -> i32 {
     if layer <= 1 {
+        return 1;
+    }
+    if layer == num {
         return 1;
     }
 
@@ -127,8 +141,8 @@ fn test2(){
 
 pub fn main() {
     println!("main exit");
+
     let mut cache = vec![vec![0; 300]; 300];
-    for i in 1..121 {
-        println!("sum({}) = {}", i, sum(&mut cache, i));
-    }
+    let mut v = layer_count(&mut cache, 8, 3);
+    println!("v= {}", v)
 }
