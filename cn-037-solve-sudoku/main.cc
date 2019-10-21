@@ -84,6 +84,9 @@ void insertUp(struct Node* new_, struct Node* old)
     old->up = new_;
 }
 
+// 从矩阵中移除 `col` 这一列
+// 从 root-> 指针这一个链表中移除 col
+// 并且把 col 挂载的列的结点触及的整个行从矩阵移除
 void cover(struct Node* col)
 {
     col->right->left = col->left;
@@ -137,6 +140,7 @@ struct Node* minSizeCol(struct Node* root)
 class Solution {
 
     list<struct Node*> allocedNodes_;
+	vector<struct Node*> colHeaders_;
 
     struct Node* allocNode()
     {
@@ -147,6 +151,7 @@ class Solution {
         n->right = n;
         n->up = n;
         n->down = n;
+		n->val = -1;
         return n;
     }
 
@@ -162,7 +167,27 @@ public:
         allocedNodes_.clear();
     }
 
-    // find solution to cells
+	// find solution to cells
+	
+	// X算法可以表述为
+	// 约束：每一列只能有 1 个 1 每一行有多少个 1 无所谓
+	// 1 选择 size 最小的列
+	// 2 对于这个列中的每一行
+	// 2.1 选择了这一行
+	// 2.2 移除这一行包含的列
+	// 2.3 移除与这一行冲突的行
+	// 3 剩下的行列 递归 X 算法
+	
+    
+	// 下面的实现是，相当于考虑加上十字链表后，如何适配 X 算法
+	// 1 选择 size 最小的列(对应到数独的含义是可填入数字最少的那个 行/或者列/或者宫)
+	// 2 把这一列和它挂载的行都移除掉 (相当于行列只移除了一部分，行只移除了)
+	// 3 对于这个列的每一行
+	// 3.1 选择了这一行
+	// 3.2 把这一行的其他列以及它挂载的行都移除掉(这才算补上剩下的) 
+	// 3.3 递归 直到所有行都遍历过了
+	// 3.4 恢复现场
+	// 4 恢复现场
     bool solve(struct Node* root, vector<struct Node*>& stk, vector<int>& cells)
     {
 
@@ -190,6 +215,7 @@ public:
             return true;
         }
 
+		// 确定一个列，只要这个列没有可选的了，那么我们就求解结束了
         struct Node* col = minSizeCol(root);
         cover(col);
 
@@ -226,8 +252,14 @@ public:
         //  约束 3 每列必须有唯一值 9*9 +
         //  约束 4 每宫中的每格必须有值 9*9
         // = 324
+		// 分 4 个读法
+		// 约束1 读作 i,j 放了值，无论是几都是写1
+		// 约束2 读作 i 行放了 [1,2,...9]
+		// 约束3 读作 j 列放了 [1,2,...9]
+		// 约束4 读作 box 宫放了 [1,2,...9]
 
-        // max rows = 每个格子取值 1-9 的可能的和为 9*9*9
+        // max rows = 每个格子取值 1-9 的可能的和为 9*9*9 
+		// 行读作 (i,j) 坐标放置了数字 n
 
         vector<struct Node*> colHeaders;
         colHeaders.resize(4 * 100);
@@ -276,19 +308,29 @@ public:
                     int name = 100 + gridSize * i + val;
                     newColToLeft(root, colHeaders, name);
                 }
-
-                if (!boolCol[i][val]) {
-                    int name = 200 + gridSize * i + val;
-                    newColToLeft(root, colHeaders, name);
-                }
-
-                if (!boolBox[i][val]) {
-                    int name = 300 + gridSize * i + val;
-                    newColToLeft(root, colHeaders, name);
-                }
             }
         }
 
+		for (size_t i = 0; i < boolCol.size(); i++) {
+			for (size_t val = 1; val < 10; val++) {
+				if (!boolCol[i][val]) {
+					int name = 200 + gridSize * i + val;
+					newColToLeft(root, colHeaders, name);
+				}
+			}
+		}
+		for (size_t i = 0; i < boolBox.size(); i++) {
+			for (size_t val = 1; val < 10; val++) {
+				if (!boolBox[i][val]) {
+					int name = 300 + gridSize * i + val;
+					newColToLeft(root, colHeaders, name);
+				}
+			}
+		}
+
+
+		// 这是在遍历每一行 行总共是 9*9 个格子，每个格子 1-9 可能的数字 
+		// 总共 9*9*9
         for (size_t i = 0; i < cells.size(); i++) {
             if (cells[i] == 0) {
                 size_t row = i / gridSize;
@@ -297,24 +339,36 @@ public:
 
                 for (int v = 1; v < 10; v++) {
 
+					// 这表示的意思是 4 个约束都要同时满足
+					// 为什么是 4 个，因为这里看到 3 个，加上外面的大循环 if(cells[i] ==0)
+					// 为什么满足 4 个约束才插入行呢
+					// 我们拿矩阵来看，i 在 81 中，没有放数字，如果要放数字，他必须同时满足
+					// 行不冲突 列不冲突 宫不冲突，因此是几个都要满足，如果仅仅满足部分约束，那不叫解
                     if ((boolRow[row][v] || boolCol[col][v] || boolBox[box][v])) {
                         continue;
                     }
 
-                    struct Node* n0 = newNodeAtCol(colHeaders, i);
-                    n0->val = v;
-                    struct Node* nr = newNodeAtCol(colHeaders, 100 + gridSize * row + v);
-                    struct Node* nc = newNodeAtCol(colHeaders, 200 + gridSize * col + v);
-                    struct Node* nb = newNodeAtCol(colHeaders, 300 + gridSize * box + v);
+					// 命名 rcn = row,col放数字n  rn 行上有数字 n 
+                    struct Node* rcn = newNodeAtCol(colHeaders, i);
+					rcn->val = v;
+                    struct Node* rn = newNodeAtCol(colHeaders, 100 + gridSize * row + v);
+                    struct Node* cn = newNodeAtCol(colHeaders, 200 + gridSize * col + v);
+                    struct Node* bn = newNodeAtCol(colHeaders, 300 + gridSize * box + v);
 
+					// 把结点与列头区分开来，好理解
+					rn->val = 0;
+					cn->val = 0;
+					bn->val = 0;
                     // 相同行链接起来
-                    insertLeft(nr, n0);
-                    insertLeft(nc, n0);
-                    insertLeft(nb, n0);
+                    insertLeft(rn, rcn);
+                    insertLeft(cn, rcn);
+                    insertLeft(bn, rcn);
                 }
             }
         }
 
+		colHeaders_ = colHeaders;
+		// 到这里观察所有列都有数字 没有空列 怎么做到的 ？
         return ""; // noerror
     }
 
@@ -365,6 +419,10 @@ public:
                 cells[i * GRID_SIZE + j] = c - '0';
             }
         }
+
+		if (cells.size() / GRID_SIZE != GRID_SIZE) {
+			return;
+		}
 
         auto err = build(root, cells, GRID_SIZE);
         if (err.size() > 0) {
@@ -445,3 +503,127 @@ int main()
     std::cout << "main exit\n";
     return 0;
 }
+
+
+/*
+X 算法推演举例
+  1  2  3  4  5  6  7
+A 1        4        7
+B 1        4
+C          4  5     7
+D       3     5  6
+E    2  3        6  7
+F    2              7
+
+
+
+
+1 选择列 1 包含行  A B
+
+2 for 行 [A, B]
+
+	2.1 选择 A 行 矩阵移除行列
+
+		   2  3  5  6
+		D     3  5  6
+
+
+		2.1.1 这个不行， 出现了 size=0 的列，结束本次调用，需要递归回溯
+
+	2.2 选择 B 行 矩阵移除行列
+
+		  2  3  5  6  7
+		D    3  5  6
+		E 2  3     6  7
+		F 2           7
+
+		2.2.1
+
+		继续这样递归，选择 size 最小的列 5,
+		行为 D
+
+			2.2.1.1 for [D]
+				2.2.1.1.1 选择 D 行 矩阵移除行列
+
+					  2  7
+					F 2  7
+
+
+				2.2.1.1.2 继续选择 size 最小的列， 2， 行就是 F，
+
+				选择完，没有行了，说明这是 1 个解。
+
+本文件的算法举例
+
+  1  2  3  4  5  6  7
+A 1        4        7
+B 1        4
+C          4  5     7
+D       3     5  6
+E    2  3        6  7
+F    2              7
+
+
+推演：
+1 选择 size 最小的列 1,
+
+2 移除这一列及列上的所有行 即 A B
+
+	   2  3  4  5  6  7
+	C        4  5     7
+	D     3     5  6
+	E  2  3        6  7
+	F  2              7
+
+
+3 for 行 [A, B]
+
+	3.1 选择行 A
+		3.1.1 for 行 A的每一列 [4, 7]
+			3.1.1.1 列 4 ，移除这一列及列上的所有行
+
+				   2  3  5  6  7
+				D     3  5  6
+				E  2  3     6  7
+				F  2           7
+			 3.1.1.2 列 7 ，移除这一列及列上的所有行
+
+				   2  3  5  6
+				D     3  5  6
+
+		3.1.2 递归
+
+
+
+
+	3.2 选择 B 行
+		3.2.1 for 行 B 的每一列 [4]
+			3.1.1.1 列 4 ，移除这一列及列上的所有行
+
+				   2  3  5  6  7
+				D     3  5  6
+				E  2  3     6  7
+				F  2           7
+
+			3.1.1.2 递归
+				3.1.1.2.1 选择 size 最小的列 5
+				3.1.1.2.2 移除这一列及列上的所有行
+					   2  3  6  7
+					E  2  3  6  7
+					F  2        7
+				3.1.1.2.3 for 行 [D]
+					3.1.1.2.3.1 选择行 D
+						3.1.1.2.3.1.1 for 行 D 上的每一列 [3, 6]
+							3.1.1.2.3.1.1.1 列 3 移除这一列及列上的所有行
+								   2  6  7
+								F  2     7
+							3.1.1.2.3.1.1.2 列 6 移除这一列及列上的所有行 
+(十字链表的移除可以处理这种情况 cover uncover 变成 cover cover uncover 也行，指针是对的，但是 size 不对)
+								   2  7
+								F  2  7
+
+							3.1.1.2.3.1.1.3 递归
+								省略， 选择 行 F
+								再次递归就没行（列）了
+
+*/
