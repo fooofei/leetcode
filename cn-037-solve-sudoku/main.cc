@@ -137,7 +137,6 @@ struct Node* minSizeCol(struct Node* root)
 class Solution {
 
     list<struct Node*> allocedNodes_;
-    // struct Node* columnHeads[400]; // for what?
 
     struct Node* allocNode()
     {
@@ -265,10 +264,9 @@ public:
         }
 
         for (size_t i = 0; i < cells.size(); i++) {
-            if (cells[i] != 0) {
-                continue;
-            }
-            newColToLeft(root, colHeaders, i);
+            if (cells[i] == 0) {
+                newColToLeft(root, colHeaders, i);
+            }            
         }
 
         for (size_t i = 0; i < boolRow.size(); i++) {
