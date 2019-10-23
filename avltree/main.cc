@@ -21,9 +21,9 @@ struct Node {
     struct Node* right;
     struct Node* parent;
 
-    struct Node(int v)
+    Node(int v)
         : value(v)
-        , height(0)
+        , height(1)
         , left(NULL)
         , right(NULL)
         , parent(NULL)
@@ -32,15 +32,19 @@ struct Node {
 };
 using Node = struct Node;
 
+Node* leftRotate(Node* x);
+Node* rightRotate(Node* x);
+
 void treeInsert(Node* n, Node* new_)
 {
+    Node* root = n;
     for (; n;) {
         if (new_->value > n->value) {
             if (n->right == NULL) {
                 break;
             }
             n = n->right;
-        } else if(new_->value < n->value) {
+        } else if (new_->value < n->value) {
             if (n->left == NULL) {
                 break;
             }
@@ -60,24 +64,27 @@ void treeInsert(Node* n, Node* new_)
         new_->parent = n;
     }
     // 需要刷新高度
-    if (n->height == 0) {
-        for (; n;) {
-            int left = 0;
-            int right = 0;
-            if (n->left) {
-                left = n->left->height;
-            }
-            if (n->right) {
-                right = n->right->height;
-            }
-            int height = max(left, right) + 1;
-            // 不需要向上刷新了
-            if (height == n->height) {
-                break;
-            }
-            n->height = height;
-            n = n->parent;
+    for (; n;) {
+        int left = 0;
+        int right = 0;
+        if (n->left) {
+            left = n->left->height;
         }
+        if (n->right) {
+            right = n->right->height;
+        }
+        int height = max(left, right) + 1;
+        // 不需要向上刷新了
+        if (height == n->height) {
+            break;
+        }
+        n->height = height;
+        if (left > right && left - right > 1) {
+            rightRotate(n);
+        } else if (right > left && right - left > 1) {
+            leftRotate(n);
+        }
+        n = n->parent;
     }
 
     // banlance
@@ -97,13 +104,19 @@ void treeInsert(Node* n, Node* new_)
 
 */
 
-Node* rightRoutate(Node* x)
+Node* rightRotate(Node* x)
 {
     Node* y = x->left;
-    x->left = NULL;
+    x->left = y->right;
     y->right = x;
+    return y;
+}
 
-    y->height = max(y->left->height, y->right->height) + 1;
+Node* leftRotate(Node* x)
+{
+    Node* y = x->right;
+    x->right = y->left;
+    y->left = x;
     return y;
 }
 
@@ -139,7 +152,7 @@ void levelOrderWithNull(const vector<Node*>& childs, vector<string>& vals)
 
 void test1()
 {
-    vector<int> vec = {-3, 0, 5, 9};
+    vector<int> vec = { -3, 0, 5, 9 };
 
     Node* root = new Node(-10);
 
@@ -160,8 +173,8 @@ void test1()
 
 int main()
 {
-	
-	test1();
+
+    test1();
     std::cout << "main exit\n";
     return 0;
 }
