@@ -62,10 +62,7 @@ public:
             if (abs(thisClosest - target) < abs(closest - target)) {
                 closest = thisClosest;
             }
-            if (abs(thisClosest - target) < abs(closest - target)) {
-                closest = thisClosest;
-            }
-
+            
             // 这个加速也要不得 不一定拿到的是最小的 不能得出结论说不用比较后面的了
             // if (new_ && closest > target) {
             //     // 没必要继续比较了
