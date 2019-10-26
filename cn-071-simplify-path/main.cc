@@ -9,45 +9,50 @@
 #include <stack>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <thread>
+#include <time.h>
 #include <vector>
+
 using namespace std;
 
 // https://leetcode-cn.com/problems/simplify-path/
+// 这个题目简直模糊的要命
+
+// 一定要强调 ../ 才是向上 ..abc 不可以向上
 
 class Solution {
 public:
     string simplifyPath(string path)
     {
         vector<string> paths;
+        vector<string> names; // `/` 分割的名字们
+
         string name;
-        int j;
         path += '/';
-        for (int i = 0; i < path.size(); i++) {
-            switch (path[i]) {
-            case '/':
+        for (int i = 0; i < (int)path.size(); i++) {
+
+            if (path[i] == '/') {
                 if (name.size() > 0) {
-                    paths.push_back(name);
+                    names.push_back(name);
                 }
                 name.clear();
-                break;
-            case '.':
-                for (j = i + 1; j < path.size() && path[j] == '.'; j++) {
-                }
-                if (j - i == 2) {
-                    paths.pop_back();
-                    break;
-                } else if (j - i > 2) {
-                    for (int k = i; k < j; k++) {
-                        name.push_back('.');
-                    }
-                }
-                i = j - 1;
-                break;
-            default:
+            } else {
                 name.push_back(path[i]);
-                break;
+            }
+        }
+
+        for (int i = 0; i < (int)names.size(); i++) {
+
+            if (names[i] == "..") {
+                if (paths.size() > 0) {
+                    paths.pop_back();
+                }
+            } else if (names[i] == ".") {
+
+            } else {
+                paths.push_back(names[i]);
             }
         }
 
@@ -71,11 +76,19 @@ void test2()
     printf("%s\n", r.c_str());
 }
 
-void test1()
+void test3()
 {
     Solution sln;
 
     auto r = sln.simplifyPath("/...");
+    printf("%s\n", r.c_str());
+}
+
+void test1()
+{
+    Solution sln;
+
+    auto r = sln.simplifyPath("/..hidden");
     printf("%s\n", r.c_str());
 }
 
@@ -86,7 +99,6 @@ int main()
     (void)sln;
 
     test1();
-    test2();
 
     std::cout << "main exit\n";
     return 0;
