@@ -21,22 +21,25 @@ class Solution {
 public:
     string convert(string s, int numRows)
     {
-        vector<string> rows;
-        if (numRows == 1) {
+        if (numRows == 1 || numRows >= s.size()) {
             return s;
         }
+        vector<string> rows;
+        rows.resize(numRows);
 
         int rowStep;
         int rowIndex = 0;
 
         for (int i = 0; i < (int)s.size(); i++) {
+            // 如何安排这三个的顺序
             rows[rowIndex].push_back(s[i]);
-            if (rowIndex == 0) {
+            if (rowIndex <= 0) {
                 rowStep = 1;
             }
-            if (rowIndex == numRows - 1) {
+            if (rowIndex >= numRows - 1) {
                 rowStep = -1;
             }
+
             rowIndex += rowStep;
         }
 
