@@ -15,7 +15,9 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/submissions/
+// 003 https://leetcode-cn.com/problems/longest-substring-without-repeating-characters
+
+// 我倒是想复杂了，代码量大
 
 class UniqSubStr {
 public:
