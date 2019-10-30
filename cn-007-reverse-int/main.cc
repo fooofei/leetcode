@@ -7,7 +7,9 @@
 
 using namespace std;
 
-//  https://leetcode-cn.com/problems/reverse-integer/
+// 007 https://leetcode-cn.com/problems/reverse-integer/
+
+// 看了官方的解之后，发现官方题目的意思是仅仅让使用 int 整型，不允许使用更大的整型
 
 class Solution {
 public:
