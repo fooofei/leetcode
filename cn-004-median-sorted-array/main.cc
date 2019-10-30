@@ -23,6 +23,7 @@ using namespace std;
 // 004 https://leetcode-cn.com/problems/median-of-two-sorted-arrays/
 
 // https://buptwc.com/2018/10/12/Leetcode-4-Median-of-Two-Sorted-Arrays/
+// https://leetcode-cn.com/problems/median-of-two-sorted-arrays/solution/4-xun-zhao-liang-ge-you-xu-shu-zu-de-zhong-wei-shu/
 
 int MidInt(int a, int b)
 {
@@ -38,6 +39,7 @@ double MidDouble(int a, int b)
     return (a + b) / 2;
 }
 
+// 合并为 1 个大数组 办法很简单，但是时间消耗上不满足
 class Solution1 {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
@@ -78,6 +80,7 @@ public:
     }
 };
 
+//  一个数组怎么求中位数
 double Median1(const vector<int>& nums)
 {
     int i = nums.size() / 2;
@@ -92,7 +95,7 @@ double Median1(const vector<int>& nums)
     return (next + prev) / 2;
 }
 
-// 两个数组是连续的 left, right
+// 两个数组是连续的 left, right 的中位数
 double Median2(const vector<int>& left, const vector<int>& right)
 {
     size_t len = left.size() + right.size();
@@ -122,7 +125,7 @@ double Median2(const vector<int>& left, const vector<int>& right)
     return (next + prev) / 2;
 }
 
-// 两个数组是交叉的 分割在两个数组中
+// 两个数组的中位数(包括了 Median2 的情景)
 double Median3(const vector<int>& nums1, const vector<int>& nums2)
 {
     // 调换一次顺序
@@ -140,8 +143,14 @@ double Median3(const vector<int>& nums1, const vector<int>& nums2)
     // left2 = 4 right2 = 4
     // mid = (4 + 4) /2
     // m+n = 7
-    // 2*(m+n) = 14  // 与教程的不同点 我认为加上虚拟点不应该是 2*(m+n)+2 个
-    // 再加上 INT_MIN INT_MAX 可能应该算 2*(m+n+2) 个，但是 INT_MIN 索引为 -1，因此计算 k 的个数的时候 也不能带上他
+    // 2*(m+n) = 14  // 与教程的不同点 我认为加上虚拟点不应该是 2*(m+n+1) 个
+    // 再加上 INT_MIN INT_MAX 可能应该算 2*(m+n+2) 个
+
+    // 分割点的取值范围是 [0, 2m+1) / [0, 2n+1)
+    // 分割点有了之后， left=分割点-1， right=分割点
+    // +1 是加的 INT_MAX, 2m+INT_MAX， INT_MIN 是在 -1 上
+    // INT_MAX 不计算进个数里，只是代表能够在这里分割
+
     // 当 2 3 | 5 决定的时候， 左边 4 个数 left1 = nums1'[3] c1 = 4 righ1 = nums1'[4]
     // 那应该第 2 个数组左边是 3 个数 left2 = nums2'[2] c2 = 3 righ2 = nums2'[3]
 
@@ -155,7 +164,6 @@ double Median3(const vector<int>& nums1, const vector<int>& nums2)
     int left = 0;
     int right = 2 * nums1Size + 1;
 
-    // 左边所有数的个数为 INT_MIN*2 + nums1Size + nums2Size
     int c1;
     int c2;
     int nums1LeftMax;
@@ -175,6 +183,7 @@ double Median3(const vector<int>& nums1, const vector<int>& nums2)
         // 如何计算呢？
         // 也就是为什么 c1 + c2 = nums1Size + nums2Size
         // 为什么不是 c1 + c2 = nums1Size + nums2Size + 1
+        // 我定的规则，个数是 2*(m+n) ，因此左边有 m+n 个数
 
         // /2 是为了带上虚拟点的数对应到原数组上 这个怎么理解
         // 加上虚拟点后       # 2 # 3 # 5 #
@@ -188,7 +197,7 @@ double Median3(const vector<int>& nums1, const vector<int>& nums2)
         nums2RightMin = c2 >= 2 * nums2Size ? INT_MAX : nums2.at(c2 / 2);
 
         if (nums1LeftMax > nums2RightMin) {
-            right = c1;
+            right = c1; // 这里不是 c1-1， right 是不等号
         } else if (nums1RightMin < nums2LeftMax) {
             left = c1 + 1;
         } else {
@@ -292,7 +301,7 @@ void test1()
 
 int main()
 {
-    
+
     std::cout << "main exit\n";
     return 0;
 }
