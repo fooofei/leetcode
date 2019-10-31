@@ -15,59 +15,6 @@ using namespace std;
 
 // 214 https://leetcode-cn.com/problems/shortest-palindrome/submissions/
 
-// 复杂度 O(n*n)
-// 没有通过
-string shortestPalindromeNN(string s)
-{
-
-    if (s.size() < 2) {
-        return s;
-    }
-
-    string sDummy;
-    for (int i = 0; i < (int)s.size(); i++) {
-        sDummy += '#';
-        sDummy += s[i];
-    }
-    sDummy += '#';
-
-    // 不 -1，sDummy 也可能是回文，题目里看不出这个意思，是从用例里得到这个信息的
-    int center = sDummy.size() / 2;
-    int r = 0;
-
-    // 2*n-1
-    for (; center > 1; center--) {
-
-        int i = center - 1;
-        int j = center + 1;
-
-        for (; i >= 0 && j < (int)sDummy.size(); i--, j++) {
-            if (sDummy[i] != sDummy[j]) {
-                break;
-            }
-        }
-
-        if (i == -1) {
-            string ret;
-
-            for (int k = sDummy.size() - 2; k > 2 * center; k--) {
-                if (sDummy[k] != '#') {
-                    ret += sDummy[k];
-                }
-            }
-            ret += s;
-            return ret;
-        }
-    }
-
-    string ret;
-    for (int i = s.size() - 1; i > 0; i--) {
-        ret += s[i];
-    }
-    ret += s;
-    return ret;
-}
-
 // 在 005 最长回文串的基础上继续做
 
 void Manacher(const string& dummy, vector<int>& dp)
@@ -118,30 +65,6 @@ void ToRomePair(const string& dummy, const vector<int>& dp, vector<RomePair>& ro
 class Solution {
 public:
     string shortestPalindrome(string s)
-    {
-		if (s == "") {
-			return s;
-		}
-        int len = s.size();
-        int  ans = 0;
-        uint64_t seed = 233LL;
-        uint64_t  base = 1LL;
-        uint64_t  pre = 0;
-        uint64_t  suf = 0;
-        for (int i = 0; i < len; ++i) {
-            pre += base * s[i];
-            base = base * seed;
-            suf = suf * seed + s[i];
-            if (pre == suf) {
-                ans = i;
-            }
-        }
-        string t = s.substr(ans + 1);
-        reverse(t.begin(), t.end());
-        return t + s;
-    }
-
-    string shortestPalindrome1(string s)
     {
         string dummy;
         if (s.size() < 2) {
