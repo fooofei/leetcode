@@ -15,7 +15,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/longest-palindromic-substring/
+// 005 https://leetcode-cn.com/problems/longest-palindromic-substring/
 
 // Manacher's ALGORITHM: O(n)时间求字符串的最长回文子串  不指定
 // https://www.felix021.com/blog/read.php?2040
@@ -167,7 +167,7 @@ int main()
     Solution sln;
     (void)sln;
 
-    test1();
+    test2();
 
     return 0;
 }
