@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/
+// 026 https://leetcode-cn.com/problems/remove-duplicates-from-sorted-array/
 
 class Solution {
 public:

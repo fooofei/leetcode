@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/remove-element/
+// 027 https://leetcode-cn.com/problems/remove-element/
 
 class Solution {
 public:

@@ -14,6 +14,7 @@ using namespace std;
 // 020 https://leetcode-cn.com/problems/valid-parentheses/
 // 这个题目不清楚，没有说清楚 ()  {}  [] 之间是否有优先级关系
 // 是否有嵌套关系
+// 发现是有嵌套没优先级
 
 int getRight(char left)
 {
