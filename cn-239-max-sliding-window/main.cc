@@ -10,7 +10,7 @@
 #include <vector>
 
 using namespace std;
-// https://leetcode-cn.com/problems/sliding-window-maximum/
+// 239 https://leetcode-cn.com/problems/sliding-window-maximum/
 // 20191008 反省，第一个版本没反应过来，如何保证窗口内的数据总是有序的
 //  以及没反应过来，如何保证移除窗口内的老数据的时候如何做到重新找到最大值
 //  比如 6 5 4 3 2，窗口为 3 个，窗口 [6,5,4] 变更到 [5,4,3] 时，
@@ -18,9 +18,13 @@ using namespace std;
 //  就只剩 [6,3] ，6 移除窗口后，就只剩 [3]，这样不对，
 //
 //  应该是这样的
-//  如何保证窗口内的数据有序，使用单调栈保证
+//  如何保证窗口内的数据有序，使用单调栈保证，栈内的 value 递减 ， index 递增
 //  如何保证窗口移动时，能得到窗口内的极值，一定是所有值的极值，
-//      因为每次入窗口（滑动窗口），都会判断当前入的值与栈顶的值比较，删除小值
+//      因为每次入窗口（滑动窗口），都会判断当前入的值与栈顶的值比较，
+//      如果新加入的是比栈顶更小（或等于）的，就入栈，这样知道最大值走后，谁更大
+//      如果新加入的是比栈顶更大的，就一直出栈到比栈顶小，刷新了极大值
+
+
 
 struct WithIndex {
     int index;
@@ -34,9 +38,8 @@ class Solution {
 public:
     void addToWindow(window_t& windowIndex, int minIndex, const WithIndex& cur)
     {
-
         // 从右边移除值小于当前值的
-        while (windowIndex.size() > 0 && windowIndex.back().value < cur.value) {
+        for (; windowIndex.size() > 0 && windowIndex.back().value < cur.value;) {
             windowIndex.pop_back();
         }
 
@@ -45,6 +48,7 @@ public:
         }
         windowIndex.push_back(cur);
     }
+
     vector<int> maxSlidingWindow(vector<int>& nums, int k)
     {
         vector<int> windowMax;
@@ -55,13 +59,15 @@ public:
         if (windowSize <= 0) {
             return windowMax;
         }
+        if (windowSize <= 1) {
+            return nums;
+        }
 
         int i = 0;
-        for (i = 0; i < windowSize; i++) {
+        for (i = 0; i < windowSize - 1; i++) {
             WithIndex cur = { i, nums[i] };
             addToWindow(window, 0, cur);
         }
-        windowMax.push_back(window.front().value);
         for (; i < nums.size(); i++) {
             WithIndex cur = { i, nums[i] };
             addToWindow(window, i - windowSize + 1, cur);

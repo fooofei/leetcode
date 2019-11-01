@@ -18,7 +18,7 @@
 
 // 053 https://leetcode-cn.com/problems/maximum-subarray/
 
-// 比 C++ 版本使用更少的逻辑，没有用到 stack 
+// 比 C++ 版本使用更少的逻辑，没有用到 stack
 
 int maxSubArray(int* nums, int numsSize)
 {
@@ -34,15 +34,9 @@ int maxSubArray(int* nums, int numsSize)
         if (sum <= 0) {
             maxSum = MAX(maxSum, sum);
             sum = 0;
-            start = INT_MAX;
-        }
-
-        if (nums[i] < 0 && start < i) {
-            maxSum = MAX(maxSum, sum);
-        }
-
-        if (start > numsSize) {
             start = i;
+        } else if (nums[i] < 0) {
+            maxSum = MAX(maxSum, sum);
         }
         sum += nums[i];
     }
