@@ -54,26 +54,27 @@ string Manacher(const string& s)
     vector<int> dp;
     dp.resize(input.size(), 0);
 
-    int mx = 0; // 能到达的最右边界
-    int mid = 0; // mx 对应的中心轴
+    int maxRight = 0; // 能到达的最右边界
+    int center = 0; // maxRight 对应的中心轴
     for (int i = 1; i < (int)input.size() - 1; i++) {
-        if (i < mx) {
-            int i2 = 2 * mid - i; // i 关于 mid 的对称点 因为 i<mx 因此 i2 不会超过数组的界限
+        int r = 0;
+        if (i < maxRight) {
+            int r2 = dp[2 * center - i]; // i 关于 mid 的对称点 因为 i<maxRight 因此 i2 不会超过数组的界限
             // 不使用简写的形式  不好理解
-            if (dp[i2] < (mx - i)) {
-                dp[i] = dp[i2]; // 这种情况不需要 dp[i] 前进
+            if (r2 < (maxRight - i)) {
+                r = r2; // 这种情况不需要 dp[i] 前进
             } else {
-                dp[i] = mx - i; // 这种情况还需要 dp[i] 前进，继续看是否还更长
+                r = maxRight - i; // 这种情况还需要 dp[i] 前进，继续看是否还更长
             }
         }
         // 获取 dp[i] 之后，我们都向前进，不管需不需要前进，省去 if else 区分情况
-        int j = 0;
-        for (; input[i + dp[i] + j] == input[i - dp[i] - j]; j++) {
+        r += 1;
+        for (; input[i + r] == input[i - r]; r++) {
         }
-        dp[i] += j - 1;
-        if ((i + dp[i]) > mx) {
-            mx = i + dp[i];
-            mid = i;
+        dp[i] += r - 1;
+        if ((i + dp[i]) > maxRight) {
+            maxRight = i + dp[i];
+            center = i;
         }
     }
 

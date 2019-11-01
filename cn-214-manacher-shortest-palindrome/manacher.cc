@@ -28,10 +28,10 @@ void Manacher(const string& dummy, vector<int>& dp)
             r = min(r2, maxRight - i);
         }
 
-        int j = 1 + r;
-        for (; dummy[i + j] == dummy[i - j]; j++) {
+        r += 1;
+        for (; dummy[i + r] == dummy[i - r]; r++) {
         }
-        dp[i] = j - 1;
+        dp[i] = r - 1;
         if (dp[i] + i > maxRight) {
             maxRight = dp[i] + i;
             center = i;
@@ -70,11 +70,12 @@ public:
         if (s.size() < 2) {
             return s;
         }
+        dummy += '~';
         for (int i = 0; i < (int)s.size(); i++) {
             dummy += '#';
             dummy += s[i];
         }
-        dummy[0] = '~';
+        dummy += '#';
         dummy += '@';
 
         vector<int> dp;
