@@ -14,7 +14,7 @@
 #include <vector>
 using namespace std;
 
-// https://leetcode-cn.com/problems/trapping-rain-water/submissions/
+// 042 https://leetcode-cn.com/problems/trapping-rain-water/submissions/
 
 class Solution {
 public:
