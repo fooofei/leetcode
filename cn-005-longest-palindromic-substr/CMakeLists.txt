@@ -15,7 +15,7 @@ else()
 endif()
 
 set(Source_files 
-    ${CMAKE_CURRENT_LIST_DIR}/hash.cc
+    ${CMAKE_CURRENT_LIST_DIR}/manacher.cc
 	)
 
 add_executable(${BIN_NAME} ${Source_files})

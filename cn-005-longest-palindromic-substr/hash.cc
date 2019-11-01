@@ -28,66 +28,97 @@ using namespace std;
 // (('b'*233)+'b')*233+'c'
 // 'b'+'b'*233 + 'c'*233*233
 
-struct HashNode {
-    int first;
-    int last;
-    uint64_t flhash; // ((('a')*233+'b')*233+'b')*233 + 'c'
-    uint64_t lfhash; // 'a' + 'b'*233 + 'b'*233*233 +'c'*233*233*233
-    uint64_t base;
-    HashNode()
+
+// 执行用时 :
+// 12 ms
+// , 在所有 cpp 提交中击败了
+// 93.98%
+// 的用户
+
+// 学习来自这里 https://blog.csdn.net/zichenzhiguang/article/details/52372988
+
+// 误区  hash 值在移除字符时，使用除法是不正确的，乘法得到的结果除法再来一次，无法复原
+
+// 根据一个字符串 计算三个数组
+// 1 乘数因子数组
+// 2 左到右方向的 hash 数组
+// 3 右到左方向的 hash 数组
+
+class StringHash {
+public:
+    vector<uint64_t> multipBases_;
+    vector<uint64_t> lrHashs_; // left -> right
+    vector<uint64_t> rlHashs_; // right -> left
+
+    void Init(const string& str)
     {
-        first =0;
-        last = 0;
-        flhash =0;
-        lfhash = 0;
-        base = 0;
+        int len = (int)str.size();
+        multipBases_.resize(len, 0);
+        lrHashs_.resize(len, 0);
+        rlHashs_.resize(len, 0);
+
+        uint64_t seed = 233;
+        multipBases_[0] = 1;
+        for (int i = 1; i < (int)multipBases_.size(); i++) {
+            multipBases_[i] = seed * multipBases_[i - 1];
+        }
+
+        lrHashs_[0] = str[0];
+        for (int i = 1; i < (int)multipBases_.size(); i++) {
+            lrHashs_[i] = lrHashs_[i - 1] * seed + str[i];
+        }
+
+        int off = rlHashs_.size() - 1;
+        rlHashs_[off] = str[off];
+        for (int i = off - 1; i >= 0; i--) {
+            rlHashs_[i] = rlHashs_[i + 1] * seed + str[i];
+        }
     }
 
+    uint64_t GetLRHash(int left, int right) const
+    {
+        if (left == 0) {
+            return lrHashs_[right - 1];
+        }
+        return lrHashs_[right - 1] - lrHashs_[left - 1] * multipBases_[right - left];
+    }
+
+    uint64_t GetRLHash(int left, int right) const
+    {
+        if (right == rlHashs_.size()) {
+            return rlHashs_[left];
+        }
+        return rlHashs_[left] - rlHashs_[right] * multipBases_[right - left];
+    }
+
+    int Size() const
+    {
+        return multipBases_.size();
+    }
 };
-using HashNode = struct HashNode;
 
-void Palindrome(const string& s, const vector<HashNode>& nodes, uint64_t seed, string* maxRome)
+// 确定了子串的长度后，即 romeLen ，根据这个长度找到所有子串中的回文串
+void SearchRome(const string& str, const StringHash& hashs, int romeLen, int* outLeft)
 {
-    vector<HashNode> subNodes;
-    for (int i = 0; i < (int)nodes.size(); i++) {
-        const HashNode& node = nodes[i];
+    uint64_t lrhash = 0;
+    uint64_t rlhash = 0;
 
-        if (node.flhash == node.lfhash) {
-            *maxRome = s.substr(node.first, node.last - node.first);
+    for (int i = 0; i < (int)hashs.Size() - romeLen; i++) {
+
+        lrhash = hashs.GetLRHash(i, i + romeLen);
+        rlhash = hashs.GetRLHash(i, i + romeLen);
+        if (lrhash == rlhash) {
+            // 如果需要精确匹配
+            // string lrstr = str.substr(i, romeLen);
+            // string rlstr = lrstr;
+            // reverse(rlstr.begin(), rlstr.end());
+            // if(lrstr == rlstr) {
+            //     *outLeft = i;
+            //     return;
+            // }
+            *outLeft = i;
             return;
         }
-
-        // 只计算少末尾字符的
-        HashNode subNode;
-        subNode.first = node.first;
-        subNode.last = node.last - 1;
-        subNode.flhash = node.flhash - s[node.last - 1];
-        subNode.flhash /= seed;
-        subNode.lfhash = node.lfhash - s[node.last - 1] * node.base;
-        subNode.base = node.base / seed;
-        subNodes.push_back(subNode);
-    }
-
-    if (nodes.size() > 0) {
-        const HashNode& parentLast = nodes[nodes.size() - 1];
-        HashNode lastNode;
-
-        // 如果是 2 个字符不相等了，就直接返回 1 个字符的
-        if (parentLast.first + 2 == parentLast.last) {
-            *maxRome += s[0];
-            return;
-        }
-
-        lastNode.first = parentLast.first + 1;
-        lastNode.last = parentLast.last;
-        lastNode.flhash = parentLast.flhash - s[parentLast.first] * parentLast.base;
-        lastNode.lfhash = parentLast.lfhash - s[parentLast.first];
-        lastNode.lfhash /= seed;
-        lastNode.base = parentLast.base / seed;
-        subNodes.push_back(lastNode);
-    }
-    if (subNodes.size() > 0) {
-        Palindrome(s, subNodes, seed, maxRome);
     }
 }
 
@@ -96,31 +127,65 @@ class Solution {
 public:
     string longestPalindrome(string s)
     {
-        string maxRome;
-        vector<HashNode> nodes;
-        HashNode node;
-
         if (s.size() < 2) {
             return s;
         }
-        uint64_t seed = 26;
-        node.first = 0;
-        node.last = s.size();
-        uint64_t base = 1;
-        node.flhash = 0;
 
-        for (int i = 0; i < (int)s.size(); i++) {
-            node.flhash = node.flhash * seed + s[i];
-            node.base = base;
-            base *= seed;
+        string dummy;
+        dummy += '~';
+        for (auto c : s) {
+            dummy += '#';
+            dummy += c;
         }
-        node.lfhash = 0;
-        for (int i = (int)s.size() - 1; i >= 0; i--) {
-            node.lfhash = node.lfhash * seed + s[i];
+        dummy += '#';
+        dummy += '@';
+
+        // 加完虚拟字符后，我们无需区分计算偶数长度还是奇数长度，最后的回文串一定是奇数
+        vector<int> oddLens;
+        for (int i = 1; i < (int)dummy.size(); i += 2) {
+            oddLens.push_back(i);
         }
-        nodes.push_back(node);
-        Palindrome(s, nodes, seed, &maxRome);
-        return maxRome;
+
+        StringHash hashs;
+        hashs.Init(dummy);
+
+        // 二分 二分为什么成立，简单说是  cabac 是回文串，那么长度更小的 aba 也是回文串
+        // 但是长度更大的就很可能不是回文串
+        // 满足在序列上是 true true true .... false ... 的局面，就能使用二分
+        // 二分查找最后一个 true
+
+        int maxLens = 0;
+        int left = -1;
+        int i = 0;
+        int j = oddLens.size();
+
+        for (; i < j;) {
+            int64_t mid64 = (int64_t)i + (int64_t)j;
+            int mid = (int)(mid64 / 2);
+
+            int findLeft = -1;
+            SearchRome(dummy, hashs, oddLens[mid], &findLeft);
+            if (findLeft > -1) {
+                if (oddLens[mid] > maxLens) {
+                    maxLens = oddLens[mid];
+                    left = findLeft;
+                }
+                i = mid + 1;
+                // 为什么一定能触碰到最后一个 true 呢
+                // 因为他要找第 1 个 false
+            } else {
+                j = mid;
+            }
+        }
+
+        // 因为虚拟字符的存在 left 一定有值
+        string ret;
+        for (int i = left; i < left + maxLens; i++) {
+            if (dummy[i] != '#') {
+                ret += dummy[i];
+            }
+        }
+        return ret;
     }
 };
 
@@ -129,7 +194,7 @@ void test2()
     Solution sln;
 
     auto r = sln.longestPalindrome("babad");
-    if (r != "bab") {
+    if (r != "bab" && r != "aba") {
         printf("%s() fail\n", __func__);
     }
 }
@@ -144,12 +209,32 @@ void test3()
     }
 }
 
-void test1()
+void test4()
 {
     Solution sln;
 
     auto r = sln.longestPalindrome("babaddtattarrattatddetartrateedredividerb");
     if (r != "ddtattarrattatdd") {
+        printf("%s() fail\n", __func__);
+    }
+}
+
+void test5()
+{
+    Solution sln;
+
+    auto r = sln.longestPalindrome("ac");
+    if (r != "a" && r != "c") {
+        printf("%s() fail\n", __func__);
+    }
+}
+
+void test1()
+{
+    Solution sln;
+
+    auto r = sln.longestPalindrome("abb");
+    if (r != "bb") {
         printf("%s() fail\n", __func__);
     }
 }
@@ -160,5 +245,9 @@ int main()
     (void)sln;
 
     test1();
+    test2();
+    test3();
+    test4();
+    test5();
     return 0;
 }

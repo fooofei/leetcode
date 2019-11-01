@@ -22,21 +22,33 @@ using namespace std;
 
 // 马拉车算法结果的一个特点
 // babad 扩展为
-// ~b#a#b#a#d&
+// ~#b#a#b#a#d#&
 // DP数组为
 // 00020301000
+
 // 发现原本回文串长度一样的 bab aba ，在这个数组里长度不一样了
 // 因此原来能发现 2 个等价结果，现在只发现 1 个结果
+// 更正，这是错误发现，因为扩展字符串时，我是这样扩展的
+//                 ~b#a#b#a#d&
+// 其实应该写这样  ~#b#a#b#a#d#&
+// 第一个两个回文串 长度不一样 b#a#b   #a#b#a#
+// 第二个长度一样             #b#a#b# #a#b#a#
+// 谨记：做字符串拓展的时候，不要丢弃首尾的 #
 
 string Manacher(const string& s)
 {
+    if (s.size() < 2) {
+        return s;
+    }
     // 扩展原字符串
     string input;
+    // 假设 ~ @ 都是字符串中不会出现的
+    input += '~';
     for (auto c : s) {
         input += '#';
         input += c;
     }
-    input[0] = '~';
+    input += '#';
     input += '&';
 
     vector<int> dp;
@@ -71,10 +83,6 @@ string Manacher(const string& s)
         if (maxRad < dp[i]) {
             maxRad = dp[i];
             maxIndex = i;
-        } else if (maxRad == dp[i] && input[maxIndex] != '#' && input[i] == '#') {
-            // #b# 要被 b#b 替换
-            maxIndex = i;
-            maxRad = dp[i];
         }
     }
 
@@ -85,9 +93,6 @@ string Manacher(const string& s)
         if (input[i] != '#') {
             sub += input[i];
         }
-    }
-    if (maxRad == 0) {
-        return string(&s[0], 1);
     }
     return sub;
 }
@@ -107,8 +112,8 @@ void test2()
     Solution sln;
 
     auto r = sln.longestPalindrome("babad");
-    if (r != "bab") {
-        printf("fail\n");
+    if (r != "bab" && r != "aba") {
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -118,7 +123,7 @@ void test3()
 
     auto r = sln.longestPalindrome("cbbd");
     if (r != "bb") {
-        printf("fail\n");
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -128,7 +133,7 @@ void test4()
 
     auto r = sln.longestPalindrome("babaddtattarrattatddetartrateedredividerb");
     if (r != "ddtattarrattatdd") {
-        printf("fail\n");
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -138,7 +143,7 @@ void test5()
 
     auto r = sln.longestPalindrome("a");
     if (r != "a") {
-        printf("fail\n");
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -148,7 +153,7 @@ void test6()
 
     auto r = sln.longestPalindrome("bb");
     if (r != "bb") {
-        printf("fail\n");
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -158,7 +163,7 @@ void test1()
 
     auto r = sln.longestPalindrome("abb");
     if (r != "bb") {
-        printf("fail\n");
+        printf("%s() fail\n", __func__);
     }
 }
 
@@ -167,7 +172,12 @@ int main()
     Solution sln;
     (void)sln;
 
+    test1();
     test2();
+    test3();
+    test4();
+    test5();
+    test6();
 
     return 0;
 }
