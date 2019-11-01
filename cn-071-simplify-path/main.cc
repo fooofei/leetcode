@@ -17,7 +17,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/simplify-path/
+// 071 https://leetcode-cn.com/problems/simplify-path/
 // 这个题目简直模糊的要命
 
 // 一定要强调 ../ 才是向上 ..abc 不可以向上

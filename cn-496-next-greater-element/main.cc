@@ -14,7 +14,7 @@
 #include <vector>
 using namespace std;
 
-// https://leetcode-cn.com/problems/next-greater-element-i/
+// 496 https://leetcode-cn.com/problems/next-greater-element-i/
 // 先把 nums2 排序的方法是错误的
 // 因为 distance 不能是经过排序的
 

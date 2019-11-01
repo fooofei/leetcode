@@ -28,7 +28,7 @@ struct TreeNode {
 
 using TreeNode = struct TreeNode;
 
-// https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
+// 111 https://leetcode-cn.com/problems/minimum-depth-of-binary-tree/
 
 // 执行用时 :
 // 8 ms

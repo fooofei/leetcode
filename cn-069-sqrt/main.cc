@@ -13,9 +13,10 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/sqrtx/
+// 069 https://leetcode-cn.com/problems/sqrtx/
 
 // 难点：溢出
+// 用除法不用乘法
 
 class Solution {
 public:

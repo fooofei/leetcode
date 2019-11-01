@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/pascals-triangle/
+// 118 https://leetcode-cn.com/problems/pascals-triangle/
 
 class Solution {
 public:

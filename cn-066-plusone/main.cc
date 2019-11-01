@@ -13,7 +13,7 @@
 
 using namespace std;
 
-// https://leetcode-cn.com/problems/plus-one/submissions/
+// 066 https://leetcode-cn.com/problems/plus-one/submissions/
 
 // 数组中每个元素是 10 进制的一个位
 // 额外存储进位

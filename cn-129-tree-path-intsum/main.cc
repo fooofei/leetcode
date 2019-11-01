@@ -28,7 +28,7 @@ struct TreeNode {
 
 using TreeNode = struct TreeNode;
 
-// https://leetcode-cn.com/problems/smallest-string-starting-from-leaf/
+// 129 https://leetcode-cn.com/problems/smallest-string-starting-from-leaf/
 
 string formatv(string fmt, ...)
 {
