@@ -40,6 +40,7 @@ string formatv(string fmt, ...)
     int size = (int)vsnprintf(NULL, 0, fmt.c_str(), ap0);
     va_end(ap0);
     if (size <= 0) {
+        va_end(ap1);
         return "";
     }
     size += 1;

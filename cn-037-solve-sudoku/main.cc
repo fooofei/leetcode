@@ -22,6 +22,21 @@ using namespace std;
 // 使用Muduo完成数独和八数码问题求解服务器
 // https://blog.csdn.net/NK_test/article/details/51525015
 
+// 提供思路
+// https://blog.csdn.net/WhereIsHeroFrom/article/details/79188290
+
+// 长文，没看出来是什么意思 
+// https://norvig.com/sudoku.html
+
+// 在线玩具
+// https://sudokuspoiler.azurewebsites.net/SudokuX/SudokuX16
+
+// 列出了大矩阵
+// https://www.stolaf.edu//people/hansonr/sudoku/exactcovermatrix.htm
+
+// X 算法讲解
+// https://github.com/Urinx/SomeCodes/tree/master/Python/DancingLinks
+
 // 037 https://leetcode-cn.com/problems/sudoku-solver/submissions/
 
 // 执行用时 : 8 ms , 在所有 cpp 提交中击败了 93.54% 的用户
@@ -53,6 +68,7 @@ string formatv(string fmt, ...)
     int size = (int)vsnprintf(NULL, 0, fmt.c_str(), ap0);
     va_end(ap0);
     if (size <= 0) {
+        va_end(ap1);
         return "";
     }
     size += 1;
