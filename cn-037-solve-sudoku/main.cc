@@ -37,6 +37,9 @@ using namespace std;
 // X 算法讲解
 // https://github.com/Urinx/SomeCodes/tree/master/Python/DancingLinks
 
+// DLX算法求解数独
+// https://unordered.org/timelines/58b4831e69000000
+
 // 037 https://leetcode-cn.com/problems/sudoku-solver/submissions/
 
 // 执行用时 : 8 ms , 在所有 cpp 提交中击败了 93.54% 的用户
