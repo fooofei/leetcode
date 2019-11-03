@@ -5,29 +5,30 @@
 
 using namespace std;
 
-struct data_t {
+struct Data {
     int data;
 };
+using Data = struct Data;
 
-bool sort_cmp(const struct data_t& last, const struct data_t& first)
+bool SortCmp(const Data& last, const Data& first)
 {
     // 有 = 号 会导致 sort 无法退出/或者崩溃
     return last.data < first.data;
 }
 
-void testSort()
+void TestSort()
 {
-    vector<struct data_t> vec;
+    vector<Data> vec;
 
     for (int i = 0; i < 100; i++) {
-        struct data_t d;
+        Data d;
         d.data = 2;
         vec.push_back(d);
     }
 
     vec[33].data = 100;
 
-    sort(vec.begin(), vec.end(), sort_cmp);
+    sort(vec.begin(), vec.end(), SortCmp);
 
     cout << "first= " << (*vec.begin()).data << endl;
     cout << "last=" << (*(vec.end() - 1)).data << endl;
@@ -35,8 +36,6 @@ void testSort()
 
 int main()
 {
-
-    testSort();
-
+    TestSort();
     return 0;
 }
