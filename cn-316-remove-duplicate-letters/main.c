@@ -11,7 +11,7 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-// 316 https://leetcode-cn.com/problems/remove-duplicate-letters/submissions/
+// 316 https://leetcode-cn.com/problems/remove-duplicate-letters
 
 char* removeDuplicateLetters(char* s)
 {
