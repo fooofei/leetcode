@@ -1,5 +1,7 @@
 package leetcode
 
+// 191 https://leetcode-cn.com/problems/number-of-1-bits/
+
 func hammingWeight(num uint32) int {
 
 	var ret int
