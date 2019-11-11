@@ -82,15 +82,5 @@ storage s6
 storage s7
 storage s8
 
-s0 -> s1: sign
-s1 -> s2: digit
-s2 -> s3: dot
-s3 -> s4: digit
-s4 -> s5: e
-s5 -> s6: digit
-
-s0 -> s0: blank
-s0 -> s2: digit
-s2 -> s2: digit
 
 @enduml
