@@ -1,9 +1,47 @@
 package leetcode
 
 import (
+	"gotest.tools/assert"
 	"testing"
 )
 
 func TestIsNumber(t *testing.T) {
-
+	assert.Equal(t, isNumber("3.e10"), true)
+	assert.Equal(t, isNumber(".e10"), false)
+	assert.Equal(t, isNumber(".0e10"), true)
+	assert.Equal(t, isNumber("0.e10"), true)
+	assert.Equal(t, isNumber("3."), true)
+	assert.Equal(t, isNumber("003"), true)
+	assert.Equal(t, isNumber("003.e000"), true)
+	assert.Equal(t, isNumber("003.e0003"), true)
+	assert.Equal(t, isNumber(".e0003"), false)
+	assert.Equal(t, isNumber("003."), true)
+	assert.Equal(t, isNumber("123"), true)
+	assert.Equal(t, isNumber(" 123 "), true)
+	assert.Equal(t, isNumber("0"), true)
+	assert.Equal(t, isNumber("0123"), true)
+	assert.Equal(t, isNumber("00"), true)
+	assert.Equal(t, isNumber("-10"), true)
+	assert.Equal(t, isNumber("-0"), true)
+	assert.Equal(t, isNumber("123.5"), true)
+	assert.Equal(t, isNumber("123.000000"), true)
+	assert.Equal(t, isNumber("-500.777"), true)
+	assert.Equal(t, isNumber("0.0000001"), true)
+	assert.Equal(t, isNumber("0.00000"), true)
+	assert.Equal(t, isNumber("0."), true)
+	assert.Equal(t, isNumber("00.5"), true)
+	assert.Equal(t, isNumber("123e1"), true)
+	assert.Equal(t, isNumber("1.23e10"), true)
+	assert.Equal(t, isNumber("0.5e-10"), true)
+	assert.Equal(t, isNumber("1.0e4.5"), false)
+	assert.Equal(t, isNumber("0.5e04"), true)
+	assert.Equal(t, isNumber("12 3"), false)
+	assert.Equal(t, isNumber("1a3"), false)
+	assert.Equal(t, isNumber(""), false)
+	assert.Equal(t, isNumber("     "), false)
+	assert.Equal(t, isNumber(".1"), true)
+	assert.Equal(t, isNumber("."), false)
+	assert.Equal(t, isNumber("2e0"), true)
+	assert.Equal(t, isNumber("+.8"), true)
+	assert.Equal(t, isNumber(" 005047e+6"), true)
 }
