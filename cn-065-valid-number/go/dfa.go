@@ -52,7 +52,6 @@ func toMove(c byte) int {
 
 // 从 NFA 得到的 DFA 表中 转为表驱动法解决 // 未经过化简
 func makeMatrix() [][]int {
-
 	m := [][]int{
 		{1, 2, 3, 4, -1, -1},     // 0
 		{1, 2, 3, 4, -1, -1},     // 1
@@ -73,7 +72,6 @@ func makeMatrix() [][]int {
 
 func isNumber(s string) bool {
 	state := 0
-
 	bs := []byte(s)
 	matrix := makeMatrix()
 

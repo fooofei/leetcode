@@ -2,6 +2,7 @@
 title 有效十进制数字的 NFA 图
 
 note  "其正则表达式为 [\\s]*[+-]?(([0-9]+(.[0-9]*)?) | (.[0-9]+) ) ([eE][+-]?[0-9]+)?" as n1
+' 用一下自动画图工具 https://cyberzhg.github.io/toolbox/nfa2dfa?regex=YSpiPygoYysoZGMqKT8pfChkYyspKSAoZWI/YyspPw==
 ' a blank
 ' b +-
 ' c 0-9
@@ -9,7 +10,7 @@ note  "其正则表达式为 [\\s]*[+-]?(([0-9]+(.[0-9]*)?) | (.[0-9]+) ) ([eE][
 ' e e
 ' f others
 ' a*b?((c+(dc*)?)|(dc+)) (eb?c+)?
-' 自动画图工具 https://cyberzhg.github.io/toolbox/nfa2dfa?regex=YSpiPygoYysoZGMqKT8pfChkYyspKSAoZWI/YyspPw==
+
 storage s0
 storage s1
 storage s2
