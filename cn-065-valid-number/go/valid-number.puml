@@ -1,0 +1,96 @@
+@startuml
+title 有效十进制数字的 NFA 图
+
+note  "其正则表达式为 [\\s]*[+-]?(([0-9]+(.[0-9]*)?) | (.[0-9]+) ) ([eE][+-]?[0-9]+)?" as n1
+' a blank
+' b +-
+' c 0-9
+' d dot
+' e e
+' f others
+' a*b?((c+(dc*)?)|(dc+)) (eb?c+)?
+' 自动画图工具 https://cyberzhg.github.io/toolbox/nfa2dfa?regex=YSpiPygoYysoZGMqKT8pfChkYyspKSAoZWI/YyspPw==
+storage s0
+storage s1
+storage s2
+storage s3
+storage s4
+storage s5
+storage s6
+storage s7
+storage s8
+storage s9
+storage s10
+storage s11
+storage s20
+storage s21
+storage s22
+storage s23
+storage s24
+storage s30
+storage s88
+storage s109
+
+s0 -> s1: ε
+s1 --> s2: ε
+s1 -> s1: blank
+s2 -> s3: +-
+s2 -> s3: ε
+
+s3 -> s4: digit
+s4 -> s5: ε
+s5 --> s6: ε
+s5 -> s5: digit
+s6 -> s7: dot
+s7 --> s8: ε
+s8 --> s20: ε
+s8 -> s8: digit
+s6 --> s20: ε
+
+s3 --> s9: dot
+s9 --> s10 : digit
+s10 -> s11: ε
+s11 --> s20: ε
+s11 -> s11: digit
+
+s20 -> s21: eE
+s21 -> s22: +-
+s21 -> s22: ε
+s22 -> s23: digit
+s23 --> s24: ε
+s24 --> s30: ε
+s24 -> s24: digit
+
+s20 --> s30: ε
+s30 -> s88: ε
+s88 --> s109: ε
+s88 -> s88: blank
+
+
+newpage
+
+title DFA
+
+
+storage s0
+storage s1
+storage s2
+storage s3
+storage s4
+storage s5
+storage s6
+storage s7
+storage s8
+
+s0 -> s1: sign
+s1 -> s2: digit
+s2 -> s3: dot
+s3 -> s4: digit
+s4 -> s5: e
+s5 -> s6: digit
+
+s0 -> s0: blank
+s0 -> s2: digit
+s2 -> s2: digit
+
+@enduml

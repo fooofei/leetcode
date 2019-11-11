@@ -1,4 +1,4 @@
-package  leetcode
+package leetcode
 
 // 参考学习
 // 【编译原理】把正规式转化为DFA
@@ -13,6 +13,14 @@ package  leetcode
 // valid number 判断字符串是否为有效数字 我觉得讲的还是不够
 // https://www.cnblogs.com/higerzhang/p/4086191.html
 
+// 奇葩 他写出了一个非标准的 NFA 然后直接就得到矩阵了
+// https://sosohu.github.io/leetcode/2015/05/01/LeetCode-Valid_Number.html
+
+// 高手 用 flex 完成
+// https://blog.finaltheory.me/research/Flex-Tricks.html
+
+// 他自己的积累 让他有了轻功
+// https://zhuanlan.zhihu.com/p/25879478
 
 func isNumber(s string) bool {
 
