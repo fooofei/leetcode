@@ -44,7 +44,7 @@ func Test8(t *testing.T) {
 }
 
 func Test9(t *testing.T) {
-	ret := isMatch("babbbbaabababaabbababaababaabbaabababbaaababbababaaaaaabbabaaaabababba" +
+	ret := isMatch("babbbbaabababaabbababaababaabbaabababbaaababbababaaaaaabbabaaaabababba"+
 		"bbababbbaaaababbbabbbbbbbbbbaabbb",
 		"b**bb**a**bba*b**a*bbb**aba***babbb*aa****aabb*bbb***a")
 	assert.Equal(t, ret, false)
