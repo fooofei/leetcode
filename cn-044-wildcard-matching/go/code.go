@@ -40,13 +40,20 @@ func isMatch(s string, p string) bool {
 	return dpMatch([]byte(s), []byte(p))
 }
 
-// 怎么理解呢
+// 为什么要所有格子都计算
+// 为什么不存在一个前面是 false ，后面就不需要看的优化点呢
+// 比如 *b与a 不匹配 *b与ab 是匹配的，
+
 func dpMatch(s []byte, p []byte) bool {
 	// len()+1 省去判断空
 	dp := make([][]bool, len(s)+1)
 	for i := range dp {
 		dp[i] = make([]bool, len(p)+1)
 	}
+	// 把第一列和第一行都放上结果
+	// 这样才能有了基础去拓展其他
+	// 第一列默认有结果 false 空 pattern 与 有s 的任何输入都是 false
+	// 下面计算第一行的结果
 	dp[0][0] = true
 	for j := 0; j < len(p); j++ {
 		dp[0][j+1] = dp[0][j] && p[j] == '*'
