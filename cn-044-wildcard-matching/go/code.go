@@ -2,6 +2,9 @@ package code
 
 // 044 https://leetcode-cn.com/problems/wildcard-matching/
 
+// 他讲的我看明白了
+// https://blog.csdn.net/maxiaotiaoti/article/details/52965116
+
 // Test9 Time too long
 func match(s []byte, p []byte) bool {
 	if len(p) == 0 {
@@ -41,7 +44,7 @@ func isMatch(s string, p string) bool {
 }
 
 // 为什么要所有格子都计算
-// 为什么不存在一个前面是 false ，后面就不需要看的优化点呢
+// 为什么不存在一个前面是 false ，后面就不需要看的优化方向呢
 // 比如 *b与a 不匹配 *b与ab 是匹配的，
 
 func dpMatch(s []byte, p []byte) bool {
@@ -61,6 +64,15 @@ func dpMatch(s []byte, p []byte) bool {
 	for i := 0; i < len(s); i++ {
 		for j := 0; j < len(p); j++ {
 			if p[j] == '*' {
+				// * 不抵消字符 d[i+1][j+1] = d[i+1][j]
+				// * 抵消 1 个字符 d[i+1][j+1] = d[i][j]
+				// * 抵消 2 个字符 d[i+1][j+1] = d[i-1][j]
+				// ...
+				// * 抵消 i 个字符 d[i+1][j+1] = d[1][j]
+				// 综上得到
+				// dp[i+1][j+1] = dp[i+1][j] || dp[i][j] || dp[i-1][j] ... dp[1][j]
+				// dp[i][j+1] = dp[i][j] || dp[i-1][j] ... dp[1][j]
+				// 两个公式结合  dp[i+1][j+1] = dp[i+1][j] || dp[i][j+1]
 				dp[i+1][j+1] = dp[i+1][j] || dp[i][j+1]
 			} else if p[j] == '?' || p[j] == s[i] {
 				dp[i+1][j+1] = dp[i][j]
