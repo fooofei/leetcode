@@ -29,8 +29,7 @@ func buildDFA(pattern []byte) [][]int {
 	x := 0 // LPS (longest prefix suffix)
 	for j := 1; j < len(pattern); j++ {
 		c := pattern[j]
-		for k := range uniqChars {
-			uc := uniqChars[k]
+		for _,uc := range uniqChars {
 			matrix[uc][j] = matrix[uc][x]
 		}
 		matrix[c][j] = j + 1
