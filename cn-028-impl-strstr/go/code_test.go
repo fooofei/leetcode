@@ -1,7 +1,9 @@
 package code
 
-import "testing"
-import "gotest.tools/assert"
+import (
+	"gotest.tools/assert"
+	"testing"
+)
 
 func Test1(t *testing.T) {
 	ret := strStr("hello", "ll")
@@ -21,5 +23,11 @@ func Test3(t *testing.T) {
 func Test4(t *testing.T) {
 	input := []byte("ababac")
 	_ = buildDFA(input)
-	assert.Equal(t,true,true)
+	assert.Equal(t, true, true)
+}
+
+func Test5(t *testing.T) {
+	input := []byte("aacaaacf")
+	_ = buildDFA(input)
+	assert.Equal(t, true, true)
 }
