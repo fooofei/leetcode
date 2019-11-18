@@ -57,6 +57,7 @@ func buildDFA(pattern []byte) [][]int {
 			// 都标记上
 			// 正反馈的状态转移在下面会覆盖掉这里
 			// 这里就免去判断分支
+			// x 代表 [1,j] 之间字符的状态转移到 x
 			matrix[uc][j] = matrix[uc][x]
 		}
 		matrix[c][j] = j + 1
