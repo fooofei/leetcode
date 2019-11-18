@@ -53,5 +53,5 @@ func Test5(t *testing.T) {
 		"abaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 		[]string{"aa", "aaa", "aaaa", "aaaaa", "aaaaaa",
 			"aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa", "ba"})
-	assert.Equal(t, ret, true)
+	assert.Equal(t, ret, false)
 }

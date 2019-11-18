@@ -1,17 +1,13 @@
 package leetcode
 
-import (
-	"log"
-)
-
 // 139 https://leetcode-cn.com/problems/word-break/
 
 type Node struct {
-	C       byte
-	Parent  *Node
-	NextCnt int
-	Next    [0x100]*Node
-	Ended   bool
+	C        byte
+	Parent   *Node
+	NextList []*Node
+	NextMap  [0x100]*Node
+	Ended    bool
 }
 
 type Trie struct {
@@ -22,7 +18,8 @@ type Trie struct {
 func NewTrie() *Trie {
 	return &Trie{
 		Root: &Node{
-			Next: [256]*Node{},
+			NextMap:  [256]*Node{},
+			NextList: make([]*Node, 0),
 		},
 		Chars: [256]bool{},
 	}
@@ -32,43 +29,53 @@ func (t *Trie) insert(words []byte) {
 	p := t.Root
 	for _, c := range words {
 		i := int(c)
-		if p.Next[i] == nil {
+		if p.NextMap[i] == nil {
 			q := &Node{
-				C:      c,
-				Parent: p,
-				Next:   [256]*Node{},
+				C:        c,
+				Parent:   p,
+				NextMap:  [256]*Node{},
+				NextList: make([]*Node, 0),
 			}
-			p.Next[i] = q
-			p.NextCnt += 1
+			p.NextMap[i] = q
+			p.NextList = append(p.NextList, q)
 		}
-		p = p.Next[i]
+		p = p.NextMap[i]
 		t.Chars[c] = true
 	}
 	p.Ended = true
 }
 
-func (t *Trie) search(target []byte) bool {
-	log.Printf("search %v", len(target))
-	ends := make([]int,0)
-	p := t.Root
-	for idx, c := range target {
-		if p.Next[c] == nil {
-			break
-		}
-		p = p.Next[c]
-		if p.Ended {
-			if idx+1 >= len(target) {
-				return true
-			}
-			ends = append([]int{idx+1}, ends...)
-		}
-	}
-	if len(ends) <=0 {
+func (t *Trie) search(target []byte, endsCache []int, first int, last int) bool {
+	if endsCache[first] == 1 {
+		return true
+	} else if endsCache[first] == -1 {
 		return false
 	}
-	for _,end := range ends {
-		if t.search(target[end:]) {
+	starts := make([]int, 0)
+	p := t.Root
+	for idx := first; idx < last; idx += 1 {
+		c := target[idx]
+		if p.NextMap[c] == nil {
+			break
+		}
+		p = p.NextMap[c]
+		if p.Ended {
+			if idx+1 >= last {
+				return true
+			}
+			starts = append([]int{idx + 1}, starts...)
+		}
+	}
+	if len(starts) <= 0 {
+		return false
+	}
+	for _, start := range starts {
+		ret := t.search(target, endsCache, start, last)
+		if ret {
+			endsCache[start] = 1
 			return true
+		} else {
+			endsCache[start] = -1
 		}
 	}
 	return false
@@ -86,7 +93,8 @@ func wordBreak(s string, wordDict []string) bool {
 			return false
 		}
 	}
-	return t.search(sBytes)
+	// 因为是试探尾巴，防止尾巴重复计算
+	// 缓存 [x, last) 是否构成单词的结果
+	endsCache := make([]int, len(sBytes))
+	return t.search(sBytes, endsCache, 0, len(sBytes))
 }
-
-// 先放弃，先去学习 AC 自动机了
