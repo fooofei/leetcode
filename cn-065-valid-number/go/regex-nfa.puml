@@ -1,3 +1,48 @@
+
+@startdot
+digraph G {
+' LR or UD
+rankdir = UD;
+node [shape = doublecircle]; s109;
+node [shape = circle];
+s0 -> s1 [label = "&epsilon;"];
+s1 -> s2 [label = "&epsilon;"];
+s1 -> s1 [label = "blank"];
+s2 -> s3 [label = "+/-"];
+s2 -> s3 [label = "&epsilon;"];
+
+s3 -> s4 [label = "digit"];
+s4 -> s5 [label = "&epsilon;"];
+s5 -> s6 [label = "&epsilon;"];
+s5 -> s5 [label = "digit"];
+s6 -> s7 [label = "dot"];
+s7 -> s8 [label = "&epsilon;"];
+s8 -> s20 [label = "&epsilon;"];
+s8 -> s8 [label = "digit"];
+s6 -> s20 [label = "&epsilon;"];
+
+s3 -> s9 [label = "dot"];
+s9 -> s10  [label = "digit"];
+s10 -> s11 [label = "&epsilon;"];
+s11 -> s20 [label = "&epsilon;"];
+s11 -> s11 [label = "digit"];
+
+s20 -> s21[label = "e/E"];
+s21 -> s22 [label = "+/-"];
+s21 -> s22 [label = "&epsilon;"];
+s22 -> s23 [label = "digit"];
+s23 -> s24 [label = "&epsilon;"];
+s24 -> s30 [label = "&epsilon;"];
+s24 -> s24 [label = "digit"];
+
+s20 -> s30 [label = "&epsilon;"];
+s30 -> s88 [label = "&epsilon;"];
+s88 -> s109 [label = "&epsilon;"];
+s88 -> s88 [label = "blank"];
+}
+
+@enddot
+
 @startuml
 title 有效十进制数字的 NFA 图
 
@@ -66,22 +111,5 @@ s20 --> s30: ε
 s30 -> s88: ε
 s88 --> s109: ε
 s88 -> s88: blank
-
-
-newpage
-
-title DFA
-
-
-storage s0
-storage s1
-storage s2
-storage s3
-storage s4
-storage s5
-storage s6
-storage s7
-storage s8
-
 
 @enduml
