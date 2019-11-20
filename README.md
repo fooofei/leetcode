@@ -58,7 +58,27 @@
     当把 i+1 替换为 i 时，含义从匹配完主串的 i+1 和模式串的 j+1 到匹配完主串的 i 和模式串的 j+1 
     因为p[j+1] = *，所以含义是一样的，dp[i][j+1] = dp[i][j] || dp[i-1][j] ... || dp[0][j]
     因此换算为 dp[i+1][j+1] = dp[i+1][j] || dp[i][j+1]
+**053 最大子序列和** 
 
+    用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
+    栈放的是值
+    确保栈的 sum 总是 >=0 
+    start =0;
+    sum = nums[0];
+    for (int i = 1; i < numsSize; i++) {
+        if (sum <= 0) {
+            maxSum = MAX(maxSum, sum);
+            sum = 0;
+            start = i;
+        } else if (nums[i] < 0) {
+            maxSum = MAX(maxSum, sum);
+        }
+        sum += nums[i];
+    }
+    maxSum = MAX(maxSum, sum);
+    
+    Kadane算法 图画的好看
+    http://bedirtapkan.com/Kadane%27s-Algorithm-2/
 **155 最小值栈**
 
     在 O(1) 时间下获得某个栈中的最小值，数据栈 +　辅助栈，技巧是在辅助栈中占坑
@@ -160,23 +180,6 @@
         }
         valueStack.push_back(height[i]);
     }
-053  最大子序列和
-    用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
-    栈放的是值
-    确保栈的 sum 总是 >=0 
-    start =0;
-    sum = nums[0];
-    for (int i = 1; i < numsSize; i++) {
-        if (sum <= 0) {
-            maxSum = MAX(maxSum, sum);
-            sum = 0;
-            start = i;
-        } else if (nums[i] < 0) {
-            maxSum = MAX(maxSum, sum);
-        }
-        sum += nums[i];
-    }
-    maxSum = MAX(maxSum, sum);
 
 084 最大矩形
     操作：入栈、出栈
@@ -351,4 +354,5 @@ exam-0907 最少子弹数 单调栈很不划算
 
     053 最大子序列和
     121 买卖股票最佳时机
+        构造差价数组 然后就是一个`最大子序列和`的问题了
     198 打家劫舍
