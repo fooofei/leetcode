@@ -28,7 +28,7 @@ func subArray(nums []int) []int {
 	return sub
 }
 
-func maxProfit(prices []int) int {
+func maxProfit1(prices []int) int {
 	if len(prices) < 2 {
 		return 0
 	}
@@ -58,4 +58,13 @@ func maxInt(a, b int) int {
 		return a
 	}
 	return b
+}
+
+// 学习动态规划
+func maxProfit(prices []int) int {
+
+	T := make([][]int, 3)
+	for i := range T {
+		T[i] = make([]int, len(prices))
+	}
 }
