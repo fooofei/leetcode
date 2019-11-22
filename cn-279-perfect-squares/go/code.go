@@ -6,6 +6,8 @@ import (
 
 // 279 https://leetcode-cn.com/problems/perfect-squares/
 
+// 题目解答里也是这种遍历
+
 func minInt(a, b int) int {
 	if a < b {
 		return a
