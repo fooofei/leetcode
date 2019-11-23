@@ -1,5 +1,9 @@
 package leetcode
 
+import (
+	"math"
+)
+
 // 121 https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/
 
 // 区别与其他的教程 我们这里分开写，先构造 diff 数组，然后转化为求最大子序列和
@@ -10,13 +14,13 @@ func maxSubArray(nums []int) int {
 	sum := nums[0]
 	maxSofar := nums[0]
 	for i := 1; i < len(nums); i += 1 {
-		sum = maxInt(sum+nums[i], nums[i])
-		maxSofar = maxInt(maxSofar, sum)
+		sum = maxInts(sum+nums[i], nums[i])
+		maxSofar = maxInts(maxSofar, sum)
 	}
-	return maxInt(maxSofar, 0)
+	return maxInts(maxSofar, 0)
 }
 
-func maxProfit(prices []int) int {
+func maxProfit1(prices []int) int {
 	if len(prices) < 2 {
 		return 0
 	}
@@ -27,9 +31,33 @@ func maxProfit(prices []int) int {
 	return maxSubArray(diff)
 }
 
-func maxInt(a, b int) int {
-	if a > b {
-		return a
+func maxInts(nums ...int) int {
+	a := nums[0]
+	for i := 1; i < len(nums); i++ {
+		if nums[i] > a {
+			a = nums[i]
+		}
 	}
-	return b
+	return a
+}
+
+func maxProfit(prices []int) int {
+	if len(prices) < 2 {
+		return 0
+	}
+	T := make([][]int, 2)
+	for i := range T {
+		T[i] = make([]int, len(prices)+1)
+	}
+	// 0=不持有 1=持有
+	T[1][0] = math.MinInt32
+	for i := range prices {
+		j := i + 1
+		// 不持有
+		// T[0][j][k] = maxInts(T[0][j-1][k], T[1][j-1][k] + prices[i])
+		T[0][j] = maxInts(T[0][j-1], T[1][j-1]+prices[i])
+		// 持有 T[1][j][k] = maxInts(T[1][j-1][k], T[0][j-1][k-1] - prices[i])
+		T[1][j] = maxInts(T[1][j-1], -prices[i])
+	}
+	return T[0][len(prices)]
 }
