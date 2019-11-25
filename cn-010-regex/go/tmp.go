@@ -2,8 +2,19 @@ package main
 
 import (
 	"fmt"
+	_ "rsc.io/binaryregexp"
 	"strings"
 )
+
+// Regular Expression Matching Can Be Simple And Fast
+// (but is slow in Java, Perl, PHP, Python, Ruby, ...)
+// https://swtch.com/~rsc/regexp/regexp1.html
+// https://leetcode.com/problems/regular-expression-matching/discuss/5951/C-solution-based-on-NFA-without-backtracking-only-4ms.-From-Russ-Cox.
+// https://godoc.org/rsc.io/binaryregexp
+// https://leetcode.com/problems/regular-expression-matching/discuss/393324/State-machine-solution-easy-to-follow
+
+// 这里一个版本
+// https://mikecoder.cn/post/122/
 
 // 来自 https://leetcode-cn.com/problems/regular-expression-matching/solution/yi-bu-dao-wei-zhi-jie-an-zheng-ze-biao-da-shi-de-s/
 // 没有好感 没继续研究
