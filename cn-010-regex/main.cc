@@ -26,6 +26,7 @@ char GetChar(const char* p)
     return *p;
 }
 
+// 留下我的失败案例，写的很不好
 bool MatchV1(const char* s, const char* p)
 {
     if (GetChar(s) == 0) {
@@ -92,80 +93,60 @@ bool MatchV2(const char* s, const char* p)
     return firstCharMatch && MatchV2(s + 1, p + 1);
 }
 
-// 动态规划的解，通俗的讲，是在分治的解上增加缓存。
-// 0 == not exists
-// 1 == false
-// 2 == true
+// "动态规划的解，通俗的讲，是在分治的解上增加缓存。"
+// 在上面理解的基础上，我又有了新的理解，用动态规划求解时，不要直接在递归求解上加缓存，
+// 那样会离动态规划越来越远
 
-bool DPExists(vector<int>& dp, int i, int j, int rowLen)
+bool MatchDP(const string& s, const string& p)
 {
-    return dp[i * rowLen + j] != 0;
-}
-
-bool DPResult(vector<int>& dp, int i, int j, int rowLen)
-{
-    if (dp[i * rowLen + j] == 2) {
-        return true;
+    if (p.size() < 1) {
+        return s.size() == 0;
     }
-    return false;
-}
-
-void DPSet(vector<int>& dp, int i, int j, int rowLen, bool r)
-{
-    if (r) {
-        dp[i * rowLen + j] = 2;
-    } else {
-        dp[i * rowLen + j] = 1;
+    // row len = p len
+    // col len = s len
+    vector<vector<bool>> T;
+    T.resize(p.size() + 1);
+    for (size_t i = 0; i < T.size(); i++) {
+        T[i].resize(s.size() + 1);
     }
-}
-
-bool DPMatch(const char* s, const char* p, int sOff, int pOff, int rowLen, vector<int>& dp)
-{
-
-    if (DPExists(dp, sOff, pOff, rowLen)) {
-        return DPResult(dp, sOff, pOff, rowLen);
+    T[0][0] = true;
+    T[1][0] = false;
+    for (size_t i = 2; i < T.size(); i++) {
+        // s == ""
+        T[i][0] = T[i - 2][0] && p[i - 1] == '*';
+    }
+    for (size_t j = 1; j < T[0].size(); j++) {
+        // p == ""
+        T[0][j] = false;
     }
 
-    if (GetChar(p + pOff) == 0) {
-        return GetChar(s + sOff) == 0;
-    }
-
-    bool firstCharMatch = false;
-    char c = GetChar(s + sOff);
-    if (c != 0) {
-        firstCharMatch = (GetChar(p + pOff) == '.') || (GetChar(p + pOff) == c);
-    }
-
-    bool matched = false;
-    if (GetChar(p + pOff + 1) == '*') {
-        // 这里用递归代替 for 循环的回溯，思路简单
-        if (DPMatch(s, p, sOff, pOff + 2, rowLen, dp)) {
-            matched = true;
-        } else {
-            matched = firstCharMatch && DPMatch(s, p, sOff + 1, pOff, rowLen, dp);
+    if (T.size() > 1 && T[1].size() > 1) {
+        if (p[0] == '.' || (p[0] == s[0])) {
+            T[1][1] = true;
         }
-    } else {
-        matched = firstCharMatch && DPMatch(s, p, sOff + 1, pOff + 1, rowLen, dp);
     }
-    // 是保存当前 sOff pOff 的解，我理解错误，在上面也保存解，那是不对的
-    DPSet(dp, sOff, pOff, rowLen, matched);
-    return matched;
-}
 
-bool MatchV3(const char* s, const char* p)
-{
-    int sLen = strlen(s) + 1;
-    int pLen = strlen(p) + 1;
-    vector<int> dp;
-    dp.resize(sLen * pLen);
-    return DPMatch(s, p, 0, 0, pLen, dp);
+    for (size_t i = 2; i < T.size(); i++) {
+        for (size_t j = 1; j < T[i].size(); j++) {
+            if (p[i - 1] == '*') {
+                if (T[i - 2][j]) {
+                    T[i][j] = true;
+                } else if (T[i][j - 1] && (p[i - 2] == '.' || p[i - 2] == s[j - 1])) {
+                    T[i][j] = true;
+                }
+            } else {
+                T[i][j] = T[i - 1][j - 1] && (p[i - 1] == '.' || p[i - 1] == s[j - 1]);
+            }
+        }
+    }
+    return T[p.size()][s.size()];
 }
 
 class Solution {
 public:
     bool isMatch(string s, string p)
     {
-        return MatchV3(s.c_str(), p.c_str());
+        return MatchDP(s, p);
     }
 };
 
