@@ -2,6 +2,8 @@ package leetcode
 
 // 211 https://leetcode-cn.com/problems/add-and-search-word-data-structure-design/
 
+// 题目：在字典集合内做全文匹配，用不到 Fail 指针
+
 // a-z
 const CHILDS_MAX_SIZE = 27
 
