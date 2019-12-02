@@ -10,6 +10,7 @@ package main
 // Regular Expression Matching Can Be Simple And Fast
 // (but is slow in Java, Perl, PHP, Python, Ruby, ...)
 // https://swtch.com/~rsc/regexp/regexp1.html
+// https://swtch.com/~rsc/regexp/nfa.c.txt
 // Russ Cox 说这是 Golang 的实现
 // https://godoc.org/rsc.io/binaryregexp
 
@@ -30,11 +31,12 @@ package main
 type StateType int
 
 const (
-	Default StateType = 0 // out used
-	Split   StateType = 1 // out & out1 used
-	Match   StateType = 2
+	Default StateType = 0 // `out` used
+	Split   StateType = 1 // `out` & `out1` used
+	Match   StateType = 2 // the final state
 )
 
+// String() add convenient string for debug or print StateType
 func (t StateType) String() string {
 	switch t {
 	case Split:
@@ -51,29 +53,35 @@ type State struct {
 	Ch   rune      // char
 	Out  *State
 	Out1 *State
-	ListID int
+	Mark int // 用 stepCount 去除步进状态集中的重复状态 真是秒
 }
 
-func addState(l []*State, s *State, listid int) []*State {
-	if s.ListID == listid {
-		return l
-	}
-	if s.Type == Split {
-		l = addState(l, s.Out, listid)
-		l = addState(l, s.Out1, listid)
-	} else {
-		l = append(l, s)
+func addState(l []*State, s *State, stepCount int) []*State {
+	queue := make([]*State, 0, 16)
+	queue = append(queue, s)
+	for len(queue) > 0 {
+		s = queue[0]
+		queue = queue[1:]
+		if s.Mark == stepCount {
+			continue
+		}
+		s.Mark = stepCount
+		if s.Type == Split {
+			queue = append(queue, s.Out)
+			queue = append(queue, s.Out1)
+		} else {
+			l = append(l, s)
+		}
 	}
 	return l
 }
 
-func step(clist []*State, ch rune, nlist []*State, listid * int) []*State {
-	(*listid) += 1
+func step(clist []*State, ch rune, nlist []*State, stepCount int) []*State {
 	for _, s := range clist {
 		if s.Ch == '.' && s.Out != nil {
-			nlist = addState(nlist, s.Out, *listid)
+			nlist = addState(nlist, s.Out, stepCount)
 		} else if ch == s.Ch && s.Out != nil {
-			nlist = addState(nlist, s.Out, *listid)
+			nlist = addState(nlist, s.Out, stepCount)
 		}
 	}
 	return nlist
@@ -100,14 +108,14 @@ func makeState(ch, nextch rune) (*State, int) {
 
 func build(runep []rune, matchState *State) *State {
 	var start *State
-	start = &State{
-		Type: Default, Ch: 0,
-	}
+
 	i := 0
 	if len(runep) > 1 {
 		start, i = makeState(runep[0], runep[1])
 	} else if len(runep) > 0 {
 		start, i = makeState(runep[0], '$')
+	} else {
+		return nil
 	}
 	curState := start
 	for i < len(runep) {
@@ -119,6 +127,7 @@ func build(runep []rune, matchState *State) *State {
 			nextch = runep[i+1]
 		}
 		newState, off := makeState(ch, nextch)
+		// 这个题目只支持连接 不支持或(|)
 		curState.Out = newState
 		curState = newState
 		i += off
@@ -149,12 +158,12 @@ func isMatch(s string, p string) bool {
 	clist := make([]*State, 0, len(runep)+1)
 	nlist := make([]*State, 0, len(runep)+1)
 
-	// 原版本的称呼，作用是减少 clist 中重复的状态
-	listid := 1
-	clist = addState(clist, start, listid)
+	stepCount := 1
+	clist = addState(clist, start, stepCount)
 	for _, ch := range s {
 		nlist = nlist[:0]
-		nlist = step(clist, ch, nlist)
+		stepCount += 1
+		nlist = step(clist, ch, nlist, stepCount)
 		clist, nlist = nlist, clist
 	}
 	return hasMatch(clist, matchState)
