@@ -6,11 +6,11 @@ package leetcode
 const CHILDS_MAX_SIZE = 27
 
 type Node struct {
-	C       byte
-	Parent  *Node
-	Next    [CHILDS_MAX_SIZE]*Node
-	NextCnt int
-	Ended   bool
+	C        byte
+	Parent   *Node
+	NextMap  [CHILDS_MAX_SIZE]*Node
+	NextList []*Node
+	Ended    bool
 }
 
 type Trie struct {
@@ -22,7 +22,8 @@ type Trie struct {
 func Constructor() Trie {
 	return Trie{
 		Root: &Node{
-			Next: [CHILDS_MAX_SIZE]*Node{},
+			NextMap:  [CHILDS_MAX_SIZE]*Node{},
+			NextList: make([]*Node, 0),
 		},
 	}
 }
@@ -33,16 +34,17 @@ func (this *Trie) Insert(word string) {
 	p := this.Root
 	for _, c := range words {
 		i := c - 'a'
-		if p.Next[int(i)] == nil {
+		if p.NextMap[int(i)] == nil {
 			q := &Node{
-				C:      c,
-				Parent: p,
-				Next:   [CHILDS_MAX_SIZE]*Node{},
+				C:        c,
+				Parent:   p,
+				NextMap:  [CHILDS_MAX_SIZE]*Node{},
+				NextList: make([]*Node, 0),
 			}
-			p.Next[int(i)] = q
-			p.NextCnt += 1
+			p.NextMap[int(i)] = q
+			p.NextList = append(p.NextList, q)
 		}
-		p = p.Next[int(i)]
+		p = p.NextMap[int(i)]
 	}
 	p.Ended = true
 	this.StrCnt += 1
@@ -58,7 +60,7 @@ func (this *Trie) Search(word string) bool {
 		return false
 	}
 	i := words[0] - 'a'
-	if this.Root.Next[i] == nil {
+	if this.Root.NextMap[i] == nil {
 		return false
 	}
 
@@ -68,7 +70,7 @@ func (this *Trie) Search(word string) bool {
 		if p == nil {
 			return false
 		}
-		p = p.Next[i]
+		p = p.NextMap[i]
 	}
 	if p == nil {
 		return false
@@ -86,7 +88,7 @@ func (this *Trie) StartsWith(prefix string) bool {
 		return false
 	}
 	i := words[0] - 'a'
-	if this.Root.Next[i] == nil {
+	if this.Root.NextMap[i] == nil {
 		return false
 	}
 
@@ -96,7 +98,7 @@ func (this *Trie) StartsWith(prefix string) bool {
 		if p == nil {
 			return false
 		}
-		p = p.Next[i]
+		p = p.NextMap[i]
 	}
 	return p != nil
 }
