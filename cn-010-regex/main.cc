@@ -111,35 +111,39 @@ bool MatchDP(const string& s, const string& p)
     }
     T[0][0] = true;
     T[1][0] = false;
-    for (size_t i = 2; i < T.size(); i++) {
-        // s == ""
-        T[i][0] = T[i - 2][0] && p[i - 1] == '*';
-    }
+	// 第一列
+	for (size_t i = 1; i < p.size(); i++) {
+		// s == ""
+		T[i+1][0] = T[i - 1][0] && p[i] == '*';
+	}
+	// 第一行
+	// 比 Golang 的缺点是还需要手动赋值
     for (size_t j = 1; j < T[0].size(); j++) {
         // p == ""
         T[0][j] = false;
     }
 
-    if (T.size() > 1 && T[1].size() > 1) {
-        if (p[0] == '.' || (p[0] == s[0])) {
-            T[1][1] = true;
-        }
-    }
+	if (s.size() > 0 && p.size() > 0) {
+		if (p[0] == '.' || (p[0] == s[0])) {
+			T[1][1] = true;
+		}
+	}
 
-    for (size_t i = 2; i < T.size(); i++) {
-        for (size_t j = 1; j < T[i].size(); j++) {
-            if (p[i - 1] == '*') {
-                if (T[i - 2][j]) {
-                    T[i][j] = true;
-                } else if (T[i][j - 1] && (p[i - 2] == '.' || p[i - 2] == s[j - 1])) {
-                    T[i][j] = true;
-                }
-            } else {
-                T[i][j] = T[i - 1][j - 1] && (p[i - 1] == '.' || p[i - 1] == s[j - 1]);
-            }
-        }
-    }
-    return T[p.size()][s.size()];
+	for (size_t i = 1; i < p.size(); i++) {
+		for (size_t j = 0; j < s.size(); j++) {
+			if (p[i] == '*') {
+				// 匹配 0 个字符
+				if (T[i - 1][j+1]) {
+					T[i+1][j+1] = true;
+				} else if (T[i+1][j] && (p[i - 1] == '.' || p[i - 1] == s[j])) {
+					T[i+1][j+1] = true;
+				}
+			} else {
+				T[i+1][j+1] = T[i][j] && (p[i] == '.' || p[i] == s[j]);
+			}
+		}
+	}
+	return T[p.size()][s.size()];
 }
 
 class Solution {
