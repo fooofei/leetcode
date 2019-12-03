@@ -371,6 +371,17 @@ exam-0907 最少子弹数 单调栈很不划算
         因此 T[i+1][j+1] = *匹配 0 个字符 || 在 T[i][j+1] 的基础上匹配 1 个字符
         T[i+1][j+1] = *匹配 0 个字符 || （T[i][j+1] &&　继续匹配 1 个字符)
         T[i+1][j+1] = *匹配 0 个字符 || T[i][j+1]
+    053 最大子序列和
+        用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
+        栈放的是值
+        确保栈的 sum 总是 >=0 
+        
+        Kadane 算法 图画的好看
+        http://bedirtapkan.com/Kadane%27s-Algorithm-2/
+        简要的说，Kadane 算法是动态规划空间复杂度的降维
+    198 打家劫舍
+        T[i] = maxInts(T[i-2] + nums[i], T[i-1])
+        最后再 maxInts(T...)
     279 完全平方数 
         看了教程才知道是贪心算法有关
         直觉的以为减去小于当前数字的最大平方数的值，递归就可以了，
@@ -379,34 +390,7 @@ exam-0907 最少子弹数 单调栈很不划算
     300 最长上升子序列/最长递增子序列
         轻功 patience game 扑克算法
         朴素的办法是 O(n^2) 时间复杂度的动态规划
-    
-
-**动态规划 - Kadane算法**
-
-    053 最大子序列和
-        用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
-        栈放的是值
-        确保栈的 sum 总是 >=0 
-        start =0;
-        sum = nums[0];
-        for (int i = 1; i < numsSize; i++) {
-            if (sum <= 0) {
-                maxSum = MAX(maxSum, sum);
-                sum = 0;
-                start = i;
-            } else if (nums[i] < 0) {
-                maxSum = MAX(maxSum, sum);
-            }
-            sum += nums[i];
-        }
-        maxSum = MAX(maxSum, sum);
-    
-        Kadane算法 图画的好看
-        http://bedirtapkan.com/Kadane%27s-Algorithm-2/
-    121 买卖股票最佳时机
-        构造差价数组 然后就是一个`最大子序列和`的问题了
-        也可以直接入手动态规划
-    198 打家劫舍
+        
 **动态规划 - 股票买卖**
 
 更喜欢外国人 [Tushar Roy](https://www.youtube.com/user/tusharroy2525/videos) 讲的，更有逻辑，缺点是只处理了 k 次交易的情景
@@ -414,6 +398,9 @@ exam-0907 最少子弹数 单调栈很不划算
 中国人的教程 [团灭 LeetCode 股票买卖问题](https://labuladong.gitbook.io/algo/dong-tai-gui-hua-xi-lie/tuan-mie-gu-piao-wen-ti) 逻辑上差点，感觉是背诵出来的
 
     121 只允许买卖 1 次
+        构造差价数组 然后就是一个`最大子序列和`的问题了
+        也可以直接入手动态规划
+
         T[天][持有股票/不持有]
         i 和 j 不要作区分，只是为了数组边界不越界 好处理，没改变其含义
         T[j][0] = max(T[j-1][0], T[j-1][1] + prices[i])
