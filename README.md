@@ -385,6 +385,12 @@ exam-0907 最少子弹数 单调栈很不划算
         Kadane 算法 图画的好看
         http://bedirtapkan.com/Kadane%27s-Algorithm-2/
         简要的说，Kadane 算法是动态规划空间复杂度的降维
+    072 字符串编辑距离 
+        if s[i] == p[j] {
+			T[i+1][j+1] = T[i][j]
+		} else {
+			T[i+1][j+1] = minInts(T[i][j], T[i+1][j], T[i][j+1]) + 1
+		}
     198 打家劫舍
         T[i] = maxInts(T[i-2] + nums[i], T[i-1])
         最后再 maxInts(T...)
