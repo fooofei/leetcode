@@ -4,6 +4,8 @@ import "fmt"
 
 // 072 https://leetcode-cn.com/problems/edit-distance/
 
+// https://labuladong.gitbook.io/algo/dong-tai-gui-hua-xi-lie/bian-ji-ju-li
+
 func minDistance(word1 string, word2 string) int {
 	s := word1
 	p := word2
