@@ -1,6 +1,8 @@
 package code
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // 028 https://leetcode-cn.com/problems/implement-strstr/
 
@@ -31,39 +33,38 @@ import "fmt"
 // 把这个作为 X，然后 dfa[p[j]][x] 就是 j 不匹配时应该转到到下一个状态
 // 到这里理解就通畅了
 
+// 这里以动态规划的解决方案把 KMP 讲一遍
+// https://labuladong.gitbook.io/algo/dong-tai-gui-hua-xi-lie/dong-tai-gui-hua-zhi-kmp-zi-fu-pi-pei-suan-fa
 
-func buildDFA(pattern []byte) [][]int {
+func buildDFA(pat []byte) [][]int {
 	// 尽量使用多语言共有的数据结构 这里不使用 map
 	// 同样的算法也能快速应用到其他语言
 	uniqMap := make([]int, 0x100)
+	// 不使用 uniqChars 就会导致有一层循环是 for (<255) 循环量加大 其实没必要这么大
 	uniqChars := make([]byte, 0)
-	for i := 0; i < len(pattern); i++ {
-		c := pattern[i]
+	for _, c := range pat {
 		if uniqMap[c] < 1 {
 			uniqChars = append(uniqChars, c)
-			uniqMap[c] = len(uniqChars)
+			uniqMap[c] = len(uniqChars) + 1
 		}
 	}
-	matrix := make([][]int, 0x100)
-	for i := range matrix {
-		matrix[i] = make([]int, len(pattern))
+	T := make([][]int, 0x100)
+	for i := range T {
+		T[i] = make([]int, len(pat))
 	}
-	matrix[pattern[0]][0] = 1
-	x := 0 // LPS (longest prefix suffix)
-	for j := 1; j < len(pattern); j++ {
-		c := pattern[j]
+	T[pat[0]][0] = 1
+	LPS := 0 // longest prefix suffix)
+	for j := 1; j < len(pat); j++ {
+		c := pat[j]
 		for _, uc := range uniqChars {
-			// 这是把状态转移都假定为非正向反馈
-			// 都标记上
-			// 正反馈的状态转移在下面会覆盖掉这里
-			// 这里就免去判断分支
 			// x 代表 [1,j] 之间字符的状态转移到 x
-			matrix[uc][j] = matrix[uc][x]
+			T[uc][j] = T[uc][LPS]
 		}
-		matrix[c][j] = j + 1
-		x = matrix[c][x]
+		// 这里会覆盖上面 for 循环提前的赋值
+		T[c][j] = j + 1
+		LPS = T[c][LPS]
 	}
-	return matrix
+	return T
 }
 
 func strStr(str string, pattern string) int {
@@ -77,10 +78,9 @@ func strStr(str string, pattern string) int {
 	}
 	matrix := buildDFA(patternBytes)
 	j := 0
-	for i := 0; i < len(strBytes); i++ {
-		c := strBytes[i]
+	for i,c := range strBytes {
 		j = matrix[c][j]
-		// 不需要写成这样
+		// 不需要写成这样 在自动机里如果匹配， j 自然 +1
 		//if c == patternBytes[j] {
 		//	j++
 		//} else {
