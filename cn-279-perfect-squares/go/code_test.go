@@ -40,3 +40,7 @@ func Test6(t *testing.T) {
 func Test7(t *testing.T) {
 	assert.Equal(t, numSquares(23), 4)
 }
+
+func Test8(t *testing.T) {
+	assert.Equal(t, numSquares(4), 1)
+}
