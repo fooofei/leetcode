@@ -124,7 +124,8 @@
         轻功是利用 n & (n-1) 意思是去掉最后出现的 1
     204 质数/素数
         判断是不是质数时的定理 不在6的倍数两侧的一定不是质数, 质数一定落在 6x-1/6x+1 上
-        在求个数时的算法 Sieve of Eratosthenes [埃拉托斯特尼筛法](https://zh.wikipedia.org/wiki/%E5%9F%83%E6%8B%89%E6%89%98%E6%96%AF%E7%89%B9%E5%B0%BC%E7%AD%9B%E6%B3%95)
+        在求个数时的算法 Sieve of Eratosthenes [埃拉托斯特尼筛法]
+        (https://zh.wikipedia.org/wiki/%E5%9F%83%E6%8B%89%E6%89%98%E6%96%AF%E7%89%B9%E5%B0%BC%E7%AD%9B%E6%B3%95)
     xxx 合数
         质数的反义词
     205 同构字符串
