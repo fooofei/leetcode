@@ -58,6 +58,20 @@ func nim(n int, times *int, cache []int) bool {
 	return false
 }
 
+// 动态规划求解 无法解决 n 过大的问题
+func dp(n int) bool {
+	T := make([]bool, n+1)
+	T[1] = true
+	T[2] = true
+	T[3] = true
+	for i := 4; i <= n; i++ {
+		// 自己拿掉 1个 / 2个 / 3个
+		// = 相反(剩下的拿)
+		T[i] = !T[i-1] || !T[i-2] || !T[i-3]
+	}
+	return T[n]
+}
+
 func canWinNim(n int) bool {
 	if n < 4 {
 		return true
