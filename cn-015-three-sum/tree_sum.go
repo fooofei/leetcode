@@ -5,7 +5,8 @@ import (
 	"sort"
 )
 
-//https://leetcode-cn.com/problems/3sum/
+// 015 https://leetcode-cn.com/problems/3sum/
+
 func threeSum1(nums []int) [][]int {
 
 	sort.Ints(nums)
