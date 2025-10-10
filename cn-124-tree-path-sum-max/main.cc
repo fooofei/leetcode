@@ -65,8 +65,8 @@ int pathSum(TreeNode* n, int* maxSum)
         return 0;
     }
 
-    int left = max(0, pathSum(n->left, maxSum));
-    int right = max(0, pathSum(n->right, maxSum));
+    int left = pathSum(n->left, maxSum);
+    int right = pathSum(n->right, maxSum);
 
     int leftAndRight = n->val + max(0, left) + max(0, right);
     int leftOrRight = n->val + max(0, max(left, right));

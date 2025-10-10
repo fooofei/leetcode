@@ -23,7 +23,7 @@ func maxInt(a, b int) int {
 	return b
 }
 
-func maxSubArray(nums []int) int {
+func maxSubArray3(nums []int) int {
 	if len(nums) < 1 {
 		return 0
 	}
@@ -33,6 +33,16 @@ func maxSubArray(nums []int) int {
 	for i := 1; i < len(nums); i++ {
 		T[i] = maxInt(T[i-1]+nums[i], nums[i])
 		max = maxInt(max, T[i])
+	}
+	return max
+}
+
+func maxSubArray(nums []int) int {
+	max := nums[0]
+	seq := nums[0]
+	for i := 1; i< len(nums); i++ {
+		seq = maxInt(0, seq) + nums[i]
+		max = maxInt(max, seq)
 	}
 	return max
 }

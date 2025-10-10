@@ -5,15 +5,18 @@ import (
 )
 
 // 124 https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/
-// 参照 053 https://leetcode-cn.com/problems/maximum-subarray/
-// 区别在于 Tree 要保留的是中间结点 不能 Left Right 同时保留 最多留其中一个
-// 数组就只需要往后看就行了
+
 
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
 }
+
+///
+// 参照 053 https://leetcode-cn.com/problems/maximum-subarray/
+// 区别在于 Tree 要保留的是中间结点 不能 Left Right 同时保留 最多留其中一个
+// 数组就只需要往后看就行了
 
 func traverse(node *TreeNode, maxSum *int) int {
 	if node == nil {
@@ -23,13 +26,15 @@ func traverse(node *TreeNode, maxSum *int) int {
 	leftSum := traverse(node.Left, maxSum)
 	rightSum := traverse(node.Right, maxSum)
 
-	sumRet := maxInts(node.Val, node.Val+maxInts(0, leftSum),
-		node.Val+maxInts(0, rightSum))
-	sumNoRet := node.Val + maxInts(0, leftSum) + maxInts(0, rightSum)
+	leftAndRight := node.Val + maxInts(0, leftSum) + maxInts(0, rightSum)
+	leftOrRight := maxInts(node.Val,
+		node.Val + maxInts(0, leftSum),
+		node.Val + maxInts(0, rightSum))
 
-	*maxSum = maxInts(*maxSum, sumRet, sumNoRet)
+
+	*maxSum = maxInts(*maxSum, leftAndRight, leftOrRight)
 	// 返回的 sum 一定要是包含 node.Val 的 sum
-	return sumRet
+	return leftOrRight
 }
 
 func maxPathSum(root *TreeNode) int {

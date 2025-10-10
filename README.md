@@ -301,9 +301,17 @@ exam-0907 最少子弹数 单调栈很不划算
 
 #### 他山之石：别人的集合
 
-[LeetCode算法题整理（字符串篇）String](https://darktiantian.github.io/LeetCode%E7%AE%97%E6%B3%95%E9%A2%98%E6%95%B4%E7%90%86%EF%BC%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%AF%87%EF%BC%89String/)
+[Xiaoliji's Blog][LeetCode算法题整理（字符串篇）String](https://darktiantian.github.io/LeetCode%E7%AE%97%E6%B3%95%E9%A2%98%E6%95%B4%E7%90%86%EF%BC%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%AF%87%EF%BC%89String/)
 
-[LeetCode刷题文章目录](https://codechina.org/leetcode-catalog-index/)
+[Tinyfool的个人网站][LeetCode刷题文章目录](https://codechina.org/leetcode-catalog-index/)
+
+[LeetCode Cookbook](https://books.halfrost.com/leetcode/)
+
+[Huahua’s Tech Road](https://zxi.mytechroad.com/blog/category/dynamic-programming/)
+
+[C语言][begeekmyfriend/leetcode](https://github.com/begeekmyfriend/leetcode)
+
+[cpp/java/python][qiyuangong/leetcode](https://github.com/qiyuangong/leetcode)
 
 #### 我欣赏的基础题目
 
@@ -385,21 +393,8 @@ exam-0907 最少子弹数 单调栈很不划算
         T[i+1][j+1] = *匹配 0 个字符 || （T[i][j+1] &&　继续匹配 1 个字符)
         T[i+1][j+1] = *匹配 0 个字符 || T[i][j+1]
         求解是否匹配
-        动态规划状态表示子问题是否匹配
+        动态规划状态表示也是是否匹配
         两个字符串的字符表示矩阵
-    053 最大子序列和
-        用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
-        
-        T[i] = maxInts(T[i+1]+nums[i], nums[i])
-        然后再 maxInts(T...)        
-        求解子序列和
-        动态规划状态表示挨着当前数的子序列和，不挨着表示与前面的子序列切断联系
-        一维数组
-        最后需要把动态规划结果做二次处理
-        
-        Kadane 算法 图画的好看
-        http://bedirtapkan.com/Kadane%27s-Algorithm-2/
-        简要的说，Kadane 算法是动态规划空间复杂度的降维
     072 字符串编辑距离 
         if s[i] == p[j] {
             T[i+1][j+1] = T[i][j]
@@ -569,6 +564,32 @@ exam-0907 最少子弹数 单调栈很不划算
     212 单词搜索 2
         题意需要反复理解：是从任意点开始向上下左右方向步进
         不需要 AC 自动机
+
+#### 连续的序列
+    要点：
+        1 最值是所有解中的最大值，在遍历解中，要始终 compare，要一直维护 max 变量，
+          遍历结束之后，return max 变量
+        2 遍历过程中，是求子问题连续的解，而不是子问题的解
+          比如二叉树，求的是到当前结点，左右子树依旧连续的解，不能到了左右子树断了，这不算
+          所以左右子树的子问题解不等价与该问题的解，该问题的解还是要看1中 max 的变量
+        3 x,y 两个连续的数字，要包含 y 的情况下，最优解是 maxValue=max( max(x+y), y)，
+          也可以写作 maxValue=max(0, x) + y 这里体现了 0 作为分界线的技巧。
+
+    053 最大子序列和
+        方法一：用栈比较牵强，C 语言的写法没用到栈：入栈、清空栈
+        
+        方法二：T[i] = maxInts(T[i+1]+nums[i], nums[i])
+        然后再 maxInts(T...)        
+        求解子序列和
+        动态规划状态表示挨着当前数的子序列和，不挨着表示与前面的子序列切断联系
+        一维数组
+        最后需要把动态规划结果做二次处理
+        
+        方法三：Kadane 算法 图画的好看
+        http://bedirtapkan.com/Kadane%27s-Algorithm-2/
+        简要的说，Kadane 算法是动态规划空间复杂度的降维
+    124 二叉树中的最大路径和
+    687 最长同值路径
 
 
 #### 很难看懂题目
